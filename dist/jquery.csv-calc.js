@@ -112,7 +112,7 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
       var elem_id = $(clone).find('[data-csvcalc-id]');
       $(elem_id).attr('data-csvcalc-id', $(elem_id).text());
       var elem_price = $(clone).find('[data-csvcalc-price]');
-      $(elem_price).attr('data-csvcalc-price', $(elem_price).int());
+      $(elem_price).attr('data-csvcalc-price', $(elem_price).text());
 
       // name属性を作成
       $(clone).find('[data-csvcalc-input]').attr('name', data[m][column_id]);
