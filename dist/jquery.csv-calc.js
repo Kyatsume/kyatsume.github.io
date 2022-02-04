@@ -143,7 +143,7 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
       $(parent).find('[data-csvcalc-quotient]')
         .text(maxExp /  expGained)
         .attr('data-csvcalc-quotient', maxExp /  expGained);
-      Math.floor(price)
+    
       // 総計を算出・表示
       var total = 0;
       $(self.elem).find('[data-csvcalc-sum]').each(function(idx, elem) {
