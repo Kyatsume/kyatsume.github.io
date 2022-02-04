@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>jquery.csv-calc</title>
+<link rel="stylesheet" href="demo-01.css">
+<script src="//code.jquery.com/jquery-2.2.3.min.js"></script>
+<script src="../dist/jquery.csv-calc.js"></script>
+<script>
+  $(function() {
+    $('#exp').csvCalc('mir4.csv');
+  });
+</script>
+</head>
+<body>
+<h1>Demo 1</h1>
+<table id="exp">
+  <tr class="th">
+    <th>Level</th>
+    <th>mExp</th>
+    <th>MCount</th>
+    <th>Time</th>
+    <th>mKill</th>
+  </tr>
+  <tr class="mir4-exp" data-csvcalc-repeat>
+    <td data-csvcalc-cell="0" data-csvcalc-id></td>
+    <td data-csvcalc-cell="1"></td>
+    <td data-csvcalc-cell="2" data-csvcalc-price class="price"></td>
+    <td><input data-csvcalc-input class="amount" type="number" min="0" value="0"></td>
+    <td data-csvcalc-sum class="">0</td>
+  </tr>
+  <tr class="th">
+    <th colspan="4" class="th-Time">Total Hours</th>
+    <td data-csvcalc-total class="mKill">0</td>
+  </tr>
+</table>
+</body>
+</html>
