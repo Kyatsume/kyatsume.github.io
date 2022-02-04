@@ -3,30 +3,34 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Calculator</title>
+<title>jquery.csv-calc</title>
 <link rel="stylesheet" href="demo-01.css">
 <script src="//code.jquery.com/jquery-2.2.3.min.js"></script>
 <script src="../dist/jquery.csv-calc.js"></script>
 <script>
   $(function() {
-    $('#exp').csvCalc('mir4.csv');
+    $('#products').csvCalc('products.csv');
   });
 </script>
 </head>
 <body>
-<h1>Calculator</h1>
-<table id="exp">
+<h1>Demo 1</h1>
+<table id="products">
   <tr class="th">
     <th>Level</th>
-    <th>RequiredExp</th>
-    <th>ExpGain</th>
+    <th>Exp Needed</th>
+    <th>exp gain</th>
     <th>Mobs to be killed</th>
   </tr>
-  <tr class="mir4-exp" data-csvcalc-repeat>
+  <tr class="product-info" data-csvcalc-repeat>
     <td data-csvcalc-cell="0" data-csvcalc-id></td>
     <td data-csvcalc-cell="1" data-csvcalc-price class="price"></td>
     <td><input data-csvcalc-input class="amount" type="number" min="0" value="0"></td>
-    <td data-csvcalc-quotient class="Mobs to be killed ">0</td>
+    <td data-csvcalc-quotient class="sum">0</td>
+  </tr>
+  <tr class="th">
+    <th colspan="4" class="th-total">total</th>
+    <td data-csvcalc-total class="total">0</td>
   </tr>
 </table>
 </body>
