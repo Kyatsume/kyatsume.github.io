@@ -142,8 +142,8 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
       var parent = $(ev.target).parents('[data-csvcalc-repeat]');
       var price = $(parent).find('[data-csvcalc-price]').int();
       $(parent).find('[data-csvcalc-quotient]')
-        .text(amount / price)
-        .attr('data-csvcalc-quotient', amount / price);
+        .text(price / amount)
+        .attr('data-csvcalc-quotient', price / amount);
 
       // 総計を算出・表示
       var total = 0;
