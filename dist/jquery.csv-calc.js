@@ -144,7 +144,7 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
       $(parent).find('[data-csvcalc-quotient]')
         .text(price / amount)
         .attr('data-csvcalc-quotient', price / amount);
-     Math.floor(price)
+        Math.floor(price);
 
       // 総計を算出・表示
       var total = 0;
