@@ -112,7 +112,7 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
       var elem_id = $(clone).find('[data-csvcalc-id]');
       $(elem_id).attr('data-csvcalc-id', $(elem_id).text());
       var elem_price = $(clone).find('[data-csvcalc-price]');
-      $(elem_price).attr('data-csvcalc-price', $(elem_price).text());
+      $(elem_price).attr('data-csvcalc-price', $(elem_price).int());
 
       // name属性を作成
       $(clone).find('[data-csvcalc-input]').attr('name', data[m][column_id]);
@@ -137,6 +137,12 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
       $(parent).find('[data-csvcalc-sum]')
         .text(amount * price)
         .attr('data-csvcalc-sum', amount * price);
+      
+      var parent = $(ev.target).parents('[data-csvcalc-repeat]');
+      var price = $(parent).find('[data-csvcalc-price]').text();
+      $(parent).find('[data-csvcalc-quotient]')
+        .text(maxExp / ExpGained)
+        .attr('data-csvcalc-quotient', maxExp / ExpGained);
 
       // 総計を算出・表示
       var total = 0;
