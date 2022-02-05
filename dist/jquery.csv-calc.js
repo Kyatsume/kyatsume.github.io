@@ -145,8 +145,9 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
         .text(price / amount)
         .attr('data-csvcalc-quotient', price / amount);
 
-      var toSolve = $(ev.target).parents('[data-csvcalc-sum]');
-      var totalMobs = $(parent).find('[data-csvcalc-sum]').text();
+      var toSolve = document.getElementById(
+        "sum").value;
+      var totalMobs = $(toSolve).find('[data-csvcalc-sum]').text();
       $(parent).find('[data-csvcalc-calculate]')
         .text(sum / mobs)
         .attr('data-csvcalc-calculate', sum /  mobs);
