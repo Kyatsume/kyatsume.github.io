@@ -145,11 +145,11 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
         .text(price / amount)
         .attr('data-csvcalc-quotient', price / amount);
 
-      var parent = $(ev.target).parents('[data-csvcalc-sum]');
+      var toSolve = $(ev.target).parents('[data-csvcalc-sum]');
       var totalMobs = $(parent).find('[data-csvcalc-sum]').text();
-      $(parent).find('[data-csvcalc-divide]')
+      $(parent).find('[data-csvcalc-calculate]')
         .text(sum / mobs)
-        .attr('data-csvcalc-divide', sum /  mobs);
+        .attr('data-csvcalc-calculate', sum /  mobs);
 
       // 総計を算出・表示
       var total = 0;
