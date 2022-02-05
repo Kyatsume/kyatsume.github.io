@@ -167,7 +167,7 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
     val = val.replace(/[０-９]/g, function(s) {
       return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
     });
-    val = (this.option.only_integer) ? parseInt(val, 10) : Number(val);
+    val = (this.option.only_integer) ? Math.floor(val) : Number(val);
     if (isNaN(val)) {
       val = 0; // 数字以外は強制的にゼロとする。
     }
