@@ -119,6 +119,12 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
     }
     $(original).remove();
   },
+  
+      // name属性を作成
+      $(clone).find('[data-csvcalc-input2]').attr('name', data[m][column_id]);
+    }
+    $(original).remove();
+  },
 
   /**
    * @private
@@ -147,12 +153,7 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
         .text(price / amount)
         .attr('data-csvcalc-quotient', price / amount);
 
-      // 合計を算出・表示
-      var exP = $(ev.target).exP('[data-csvcalc-repeat]');
-      var totalMobs = $(exP).find('[data-csvcalc-sum]').text();
-      $(exP).find('[data-csvcalc-calculate]')
-        .text(totalMobs * cMobs)
-        .attr('data-csvcalc-calculate', totalMobs * cMobs);
+
 
       // 総計を算出・表示
       var total = 0;
@@ -165,7 +166,19 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
         .attr('data-csvcalc-total', total);
     });
   },
-
+    
+  calcTotal2: function () {
+    var self = this;
+    $(document).on('change', $(self.elem).find('[data-csvcalc-input2]'), function (ev) {
+      // 合計を算出・表示
+      var exP = $(ev.target).exP('[data-csvcalc-repeat]');
+      var totalMobs = $(exP).find('[data-csvcalc-sum]').text();
+      $(exP).find('[data-csvcalc-calculate]')
+        .text(totalMobs * cMobs)
+        .attr('data-csvcalc-calculate', totalMobs * cMobs);
+    });
+  },
+      
   /**
    * @private
    * @desc ユーザの入力を検査: 数値
