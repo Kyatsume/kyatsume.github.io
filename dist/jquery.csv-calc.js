@@ -152,8 +152,7 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
         .attr('data-csvcalc-total', total);
        alert ("quotient");  
     });
-  },
-  calcTotal2: function () {
+    
     var monster = this;
     $(document).on('change', $(monster.elem).find('[data-csvcalc-mobsinput]'), function (ev) {
       // バリデーションを行う
