@@ -99,6 +99,7 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
   showAtHtml: function (data) {
     var original = $(this.elem).find('[data-csvcalc-repeat]');
     var column_id = $(original).find('[data-csvcalc-id]').attr('data-csvcalc-cell');
+    var column_id2 = $(original).find('[data-csvcalc-id]').attr('data-csvcalc-cell');
     for (var m = 0; m < data.length; m++) {
       var clone = $(original).clone();
       $(original).before(clone);
@@ -158,11 +159,11 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
     var monster = this;
     $(document).on('change', $(monster.elem).find('[data-csvcalc-mobsinput]'), function (ev) {
       // バリデーションを行う
-      var cMobs = monster.validateNumber.call(monster, $(ev.target).val());
-      $(ev.target).val(cMobs); // 画面上の全角数字は、ここで半角となる。
+      var cMobs = monster.validateNumber.call(monster, $(ev.target2).val());
+      $(ev.target2).val(cMobs); // 画面上の全角数字は、ここで半角となる。
 
       // 合計を算出・表示
-      var parent2 = $(ev.target).parents('[data-csvcalc-repeat]');
+      var parent2 = $(ev.target2).parents('[data-csvcalc-repeat]');
       var totalMobs = $(parent2).find('[data-csvcalc-quotient]').text();
       $(parent2).find('[data-csvcalc-calculate]')
         .text(totalMobs / cMobs)
@@ -201,7 +202,3 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
 }); // end of "$.extend"
 
 })( /** namespace */ jQuery);
-
-function myalert() {
-alert("This is the Alert Message!");
-}
