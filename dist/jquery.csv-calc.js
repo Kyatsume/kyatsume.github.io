@@ -146,9 +146,9 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
         .attr('data-csvcalc-quotient', price / amount);
 
       // 合計を算出・表示
-      var exP = $(ev.target).exP('[data-csvcalc-sum]');
-      var cMobs = $(exP).find('[data-csvcalc-price]').text();
-      $(exP).find('[data-csvcalc-quotient]')
+      var exP = $(ev.target).exP('[data-csvcalc-repeat]');
+      var cMobs = $(exP).find('[data-csvcalc-sum]').text();
+      $(exP).find('[data-csvcalc-calculate]')
         .text(sum / mobs)
         .attr('data-csvcalc-calculate', sum/ mobs);
 
