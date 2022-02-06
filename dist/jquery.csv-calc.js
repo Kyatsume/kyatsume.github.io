@@ -159,9 +159,9 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
     var monster = this;
     $(document2).on('change', $(monster.elem).find('[data-csvcalc-mobsinput]'), function(ev) {
       // バリデーションを行う
-      var cMobs = monster.validateNumber.call(monster, $(ev.target).val());
-      $(ev.target).val(cMobs); // 画面上の全角数字は、ここで半角となる。
-             alert ("calculate");  
+      var cMobs = monster.validateNumber.call(monster, $(ev.target).val2());
+      $(ev.target).val2(cMobs); // 画面上の全角数字は、ここで半角となる。
+       alert ("calculate");  
 
       // 合計を算出・表示
       var parent2 = $(ev.target).parents('[data-csvcalc-repeat]');
