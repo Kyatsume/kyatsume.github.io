@@ -131,17 +131,13 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
       var amount = self.validateNumber.call(self, $(ev.target).val());
       $(ev.target).val(amount); // 画面上の全角数字は、ここで半角となる。
 
-      
       // 合計を算出・表示
       var parent = $(ev.target).parents('[data-csvcalc-repeat]');
       var price = $(parent).find('[data-csvcalc-price]').text();
-      $(parent).find('[data-csvcalc-calculate]')
+      $(parent).find('[data-csvcalc-sum]')
         .text(price / amount)
-        .attr('data-csvcalc-quotient', price / amount);
-      alert("quotient");  
+        .attr('data-csvcalc-calculate', price / amount);
 
-
-      
       // 総計を算出・表示
       var total = 0;
       $(self.elem).find('[data-csvcalc-sum]').each(function(idx, elem) {
@@ -151,8 +147,9 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
       $(self.elem).find('[data-csvcalc-total]')
         .text(total)
         .attr('data-csvcalc-total', total);
-      };
-  },    
+    });
+  },
+
   /**
    * @private
    * @desc ユーザの入力を検査: 数値
