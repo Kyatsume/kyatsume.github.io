@@ -113,6 +113,8 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
       $(elem_id).attr('data-csvcalc-id', $(elem_id).text());
       var elem_price = $(clone).find('[data-csvcalc-price]');
       $(elem_price).attr('data-csvcalc-price', $(elem_price).text());
+      var elem_totalMobs = $(clone).find('[data-csvcalc-quotient]');
+      $(elem_totalMobs).attr('data-csvcalc-quotient', $(elem_totalMobs).text());
 
       // name属性を作成
       $(clone).find('[data-csvcalc-input]').attr('name', data[m][column_id]);
@@ -171,7 +173,7 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
         var sum = Number($(elem).attr('data-csvcalc-quotient'));
         if (!isNaN(sum)) total += sum;
       });
-      $(self.elem).find('[data-csvcalc-total]')
+      $(monster.elem).find('[data-csvcalc-total]')
         .text(total)
         .attr('data-csvcalc-total', total);
        alert ("calculate");  
