@@ -149,10 +149,10 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
         .attr('data-csvcalc-total', total);
     });
     
-    var self = this;
-    $(document).on('change', $(self.elem).find('[data-csvcalc-input2]'), function (ev) {
+    var monster = this;
+    $(document).on('change', $(monster.elem).find('[data-csvcalc-input2]'), function (ev) {
       // バリデーションを行う
-      var CMobs = self.validateNumber.call(self, $(ev.target).val());
+      var CMobs = monster.validateNumber.call(monster, $(ev.target).val());
       $(ev.target).val(CMobs); // 画面上の全角数字は、ここで半角となる。
 
       // 合計を算出・表示
