@@ -130,15 +130,29 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
       // バリデーションを行う
       var amount = self.validateNumber.call(self, $(ev.target).val());
       $(ev.target).val(amount); // 画面上の全角数字は、ここで半角となる。
-
+    $(document).on('change', $(self.elem).find('[data-csvcalc-input2]'), function (ev) {
+      // バリデーションを行う
+      var CMobs = self.validateNumber.call(self, $(ev.target).val());
+      $(ev.target).val(CMobs); // 画面上の全角数字は、ここで半角となる。
+      
+      
       // 合計を算出・表示
       var parent = $(ev.target).parents('[data-csvcalc-repeat]');
       var price = $(parent).find('[data-csvcalc-price]').text();
       $(parent).find('[data-csvcalc-calculate]')
         .text(price / amount)
-        .attr('data-csvcalc-calculate', price / amount);
-      alert("calculate");  
+        .attr('data-csvcalc-quotient', price / amount);
+      alert("quotient");  
 
+      // 合計を算出・表示
+      var parent = $(ev.target).parents('[data-csvcalc-repeat]');
+      var totalMobs = $(parent).find('[data-csvcalc-calculate]').text();
+      $(parent).find('[data-csvcalc-CMobs]')
+        .text(price / amount)
+        .attr('data-csvcalc-calculate', totalMobs / CMobs);
+      alert("calculate");  
+      
+      
       // 総計を算出・表示
       var total = 0;
       $(self.elem).find('[data-csvcalc-sum]').each(function(idx, elem) {
