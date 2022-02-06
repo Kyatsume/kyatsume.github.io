@@ -159,9 +159,9 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
       $(ev.target).val(CMobs); // 画面上の全角数字は、ここで半角となる。
 
       // 合計を算出・表示
-      var parent = $(ev.target).parents('[data-csvcalc-repeat]');
-      var totalMobs = $(parent).find('[data-csvcalc-quotient]').text();
-      $(parent).find('[data-csvcalc-calculate]')
+      var parent2 = $(ev.target).parents('[data-csvcalc-repeat]');
+      var totalMobs = $(parent2).find('[data-csvcalc-quotient]').text();
+      $(parent2).find('[data-csvcalc-calculate]')
         .text(totalMobs / CMobs)
         .attr('data-csvcalc-calculate', totalMobs / CMobs);
 
