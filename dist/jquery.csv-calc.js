@@ -149,6 +149,7 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
       $(parent).find('[data-csvcalc-quotient]')
         .text(price / amount)
         .attr('data-csvcalc-quotient', price / amount);
+      alert("quotient");  
 
 
 
@@ -175,6 +176,7 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
       $(exP).find('[data-csvcalc-calculate]')
         .text(totalMobs * cMobs)
         .attr('data-csvcalc-calculate', totalMobs * cMobs);
+      alert("calculate");  
     });
   },
       
