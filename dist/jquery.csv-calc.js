@@ -167,10 +167,10 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
         .attr('data-csvcalc-calculate', totalMobs / cMobs);
 
       // 総計を算出・表示
-      var total = 0;
+      var totalMob = 0;
       $(monster.elem).find('[data-csvcalc-quotient]').each(function(idx, elem) {
         var qoutient = Number($(elem).attr('data-csvcalc-quotient'));
-        if (!isNaN(sum)) total += sum;
+        if (!isNaN(totalMob)) total += totalMob;
       });
       $(monster.elem).find('[data-csvcalc-total]')
         .text(total)
