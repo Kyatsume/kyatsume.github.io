@@ -151,8 +151,8 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
       var exP = $(ev.target).exP('[data-csvcalc-repeat]');
       var totalMobs = $(exP).find('[data-csvcalc-sum]').text();
       $(exP).find('[data-csvcalc-calculate]')
-        .text(totalMobs / cMobs)
-        .attr('data-csvcalc-calculate', totalMobs/ cMobs);
+        .text(totalMobs * cMobs)
+        .attr('data-csvcalc-calculate', totalMobs * cMobs);
 
       // 総計を算出・表示
       var total = 0;
