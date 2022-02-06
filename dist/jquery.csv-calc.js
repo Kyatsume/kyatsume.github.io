@@ -161,6 +161,7 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
       // バリデーションを行う
       var cMobs = monster.validateNumber.call(monster, $(ev.target).val());
       $(ev.target).val(cMobs); // 画面上の全角数字は、ここで半角となる。
+             alert ("calculate");  
 
       // 合計を算出・表示
       var parent2 = $(ev.target).parents('[data-csvcalc-repeat]');
@@ -168,6 +169,7 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
       $(parent2).find('[data-csvcalc-calculate]')
         .text(totalMobs / cMobs)
         .attr('data-csvcalc-calculate', totalMobs / cMobs);
+     
 
       // 総計を算出・表示
       var totalMob = 0;
