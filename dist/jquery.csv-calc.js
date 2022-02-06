@@ -151,8 +151,8 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
       $(self.elem).find('[data-csvcalc-total]')
         .text(total)
         .attr('data-csvcalc-total', total);
-    });
-  
+    };
+  }, 
     var self = this;         
     $(document).on('change', $(self.elem).find('[data-csvcalc-input2]'), function (ev) {
       // バリデーションを行う
