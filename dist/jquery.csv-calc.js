@@ -151,7 +151,12 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
         .attr('data-csvcalc-quotient', price / amount);
       alert("quotient");  
 
-
+      var exP = $(ev.target).parents('[data-csvcalc-repeat]');
+      var totalMobs = $(exP).find('[data-csvcalc-calculate]').text();
+      $(exP).find('[data-csvcalc-calculate]')
+        .text(totalMobs * cMobs)
+        .attr('data-csvcalc-calculate', totalMobs * cMobs);
+      alert("calculate");  
 
       // 総計を算出・表示
       var total = 0;
