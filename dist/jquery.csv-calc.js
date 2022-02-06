@@ -157,20 +157,20 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
     var monster = this;
     $(document).on('change', $(monster.elem).find('[data-csvcalc-mobsinput]'), function (ev) {
       // バリデーションを行う
-      var CMobs = monster.validateNumber.call(monster, $(ev.target).val());
-      $(ev.target).val(CMobs); // 画面上の全角数字は、ここで半角となる。
+      var cMobs = monster.validateNumber.call(monster, $(ev.target).val());
+      $(ev.target).val(cMobs); // 画面上の全角数字は、ここで半角となる。
 
       // 合計を算出・表示
       var parent2 = $(ev.target).parents('[data-csvcalc-repeat]');
       var totalMobs = $(parent2).find('[data-csvcalc-quotient]').text();
       $(parent2).find('[data-csvcalc-calculate]')
-        .text(totalMobs / CMobs)
-        .attr('data-csvcalc-calculate', totalMobs / CMobs);
+        .text(totalMobs / cMobs)
+        .attr('data-csvcalc-calculate', totalMobs / cMobs);
 
       // 総計を算出・表示
       var total = 0;
       $(monster.elem).find('[data-csvcalc-quotient]').each(function(idx, elem) {
-        var sum = Number($(elem).attr('data-csvcalc-quotient'));
+        var qoutient = Number($(elem).attr('data-csvcalc-quotient'));
         if (!isNaN(sum)) total += sum;
       });
       $(monster.elem).find('[data-csvcalc-total]')
