@@ -149,10 +149,10 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
 
       // 合計を算出・表示
       var exP = $(ev.target).exP('[data-csvcalc-repeat]');
-      var cMobs = $(exP).find('[data-csvcalc-sum]').text();
+      var tMobs = $(exP).find('[data-csvcalc-sum]').text();
       $(exP).find('[data-csvcalc-calculate]')
-        .text(sum / cmobs)
-        .attr('data-csvcalc-calculate', sum/ cmobs);
+        .text(sum / cMobs)
+        .attr('data-csvcalc-calculate', sum/ cMobs);
 
       // 総計を算出・表示
       var total = 0;
