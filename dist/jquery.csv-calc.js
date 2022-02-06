@@ -151,20 +151,6 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
       $(self.elem).find('[data-csvcalc-total]')
         .text(total)
         .attr('data-csvcalc-total', total);
-    });
-    var monster = this;         
-    $(document).on('change', $(monster.elem).find('[data-csvcalc-input2]'), function (ev) {
-      // バリデーションを行う
-      var CMobs = monster.validateNumber.call(monster, $(ev.target).val());
-      $(ev.target).val(CMobs); // 画面上の全角数字は、ここで半角となる。
-              
-      // 合計を算出・表示
-      var parent = $(ev.target).parents('[data-csvcalc-repeat]');
-      var totalMobs = $(parent).find('[data-csvcalc-calculate]').text();
-      $(parent).find('[data-csvcalc-CMobs]')
-        .text(price / amount)
-        .attr('data-csvcalc-calculate', totalMobs / CMobs);
-      alert("calculate");  
       };
   },    
   /**
