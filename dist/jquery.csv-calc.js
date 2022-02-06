@@ -167,8 +167,8 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
 
       // 総計を算出・表示
       var total = 0;
-      $(self.elem).find('[data-csvcalc-sum]').each(function(idx, elem) {
-        var sum = Number($(elem).attr('data-csvcalc-sum'));
+      $(monster.elem).find('[data-csvcalc-quotient]').each(function(idx, elem) {
+        var sum = Number($(elem).attr('data-csvcalc-quotient'));
         if (!isNaN(sum)) total += sum;
       });
       $(self.elem).find('[data-csvcalc-total]')
