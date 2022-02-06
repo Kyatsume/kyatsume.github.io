@@ -136,8 +136,7 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
       // バリデーションを行う
       var amount = self.validateNumber.call(self, $(ev.target).val());
       $(ev.target).val(amount); // 画面上の全角数字は、ここで半角となる。
-      var cMobs = self.validateNumber.call(self, $(ev.target).val());
-      $(ev.target).val(cMobs); // 画面上の全角数字は、ここで半角となる
+
 
       // 合計を算出・表示
       var parent = $(ev.target).parents('[data-csvcalc-repeat]');
@@ -170,9 +169,11 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
   calcTotal2: function () {
     var self = this;
     $(document).on('change', $(self.elem).find('[data-csvcalc-input2]'), function (ev) {
+      var cMobs = self.validateNumber.call(self, $(ev.target).val());
+      $(ev.target).val(cMobs); // 画面上の全角数字は、ここで半角となる
       // 合計を算出・表示
       var exP = $(ev.target).exP('[data-csvcalc-repeat]');
-      var totalMobs = $(exP).find('[data-csvcalc-sum]').text();
+      var totalMobs = $(exP).find('[data-csvcalc-quotient]').text();
       $(exP).find('[data-csvcalc-calculate]')
         .text(totalMobs * cMobs)
         .attr('data-csvcalc-calculate', totalMobs * cMobs);
