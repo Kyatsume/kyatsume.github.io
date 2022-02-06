@@ -116,6 +116,7 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
 
       // name属性を作成
       $(clone).find('[data-csvcalc-input]').attr('name', data[m][column_id]);
+      $(clone).find('[data-csvcalc-mobsinput]').attr('name', data[m][column_id]);
     }
     $(original).remove();
   },
@@ -151,7 +152,7 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
     });
     
     var monster = this;
-    $(document).on('change', $(monster.elem).find('[data-csvcalc-input2]'), function (ev) {
+    $(document).on('change', $(monster.elem).find('[data-csvcalc-mobsinput]'), function (ev) {
       // バリデーションを行う
       var CMobs = monster.validateNumber.call(monster, $(ev.target).val());
       $(ev.target).val(CMobs); // 画面上の全角数字は、ここで半角となる。
