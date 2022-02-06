@@ -172,7 +172,7 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
      
 
       // 総計を算出・表示
-      var totalMob = 0;
+      var totalMob = 99;
       $(monster.elem).find('[data-csvcalc-quotient]').each(function(idx, elem) {
         var qoutient = Number($(elem).attr('data-csvcalc-quotient'));
         if (!isNaN(totalMob)) total += totalMob;
