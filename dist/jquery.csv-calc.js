@@ -145,12 +145,12 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
         .text(price / amount)
         .attr('data-csvcalc-quotient', price / amount);
 
-      var toSolve = document.getElementById(
-        "sum").value;
-      var totalMobs = $(toSolve).find('[data-csvcalc-sum]').text();
-      $(parent).find('[data-csvcalc-calculate]')
+      // 合計を算出・表示
+      var exP = $(ev.target).exP('[data-csvcalc-sum]');
+      var cMobs = $(exP).find('[data-csvcalc-price]').text();
+      $(exP).find('[data-csvcalc-quotient]')
         .text(sum / mobs)
-        .attr('data-csvcalc-calculate', sum /  mobs);
+        .attr('data-csvcalc-calculate', sum/ mobs);
 
       // 総計を算出・表示
       var total = 0;
