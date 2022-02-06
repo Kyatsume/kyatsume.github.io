@@ -181,9 +181,6 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
     });
   },
 
-  function myalert() {
-alert("This is the Alert Message!");
-}
   
   /**
    * @private
@@ -204,3 +201,7 @@ alert("This is the Alert Message!");
 }); // end of "$.extend"
 
 })( /** namespace */ jQuery);
+
+function myalert() {
+alert("This is the Alert Message!");
+}
