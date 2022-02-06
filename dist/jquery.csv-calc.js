@@ -158,7 +158,7 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
 
       // 合計を算出・表示
       var parent = $(ev.target).parents('[data-csvcalc-repeat]');
-      var totalMobs = $(parent).find('[data-csvcalc-quotient]').text();
+      var totalMobs = $(parent).find('[data-csvcalc-price]').text();
       $(parent).find('[data-csvcalc-calculate]')
         .text(totalMobs / CMobs)
         .attr('data-csvcalc-calculate', totalMobs / CMobs);
