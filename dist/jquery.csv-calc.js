@@ -113,7 +113,9 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
       $(elem_id).attr('data-csvcalc-id', $(elem_id).text());
       var elem_price = $(clone).find('[data-csvcalc-price]');
       $(elem_price).attr('data-csvcalc-price', $(elem_price).text());
-
+      var elem_totalMobs = $(clone).find('[data-csvcalc-quotient]');
+      $(elem_totalMobs).attr('data-csvcalc-quotient', $(elem_totalMobs).text());
+      
       // name属性を作成
       $(clone).find('[data-csvcalc-input]').attr('name', data[m][column_id]);
     }
@@ -121,10 +123,6 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
   },
   
       // name属性を作成
-      $(clone).find('[data-csvcalc-input2]').attr('name', data[m][column_id]);
-    }
-    $(original).remove();
-  },
 
   /**
    * @private
