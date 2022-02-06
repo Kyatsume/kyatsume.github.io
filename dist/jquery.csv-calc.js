@@ -181,6 +181,10 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
     });
   },
 
+  function myalert() {
+alert("This is the Alert Message!");
+}
+  
   /**
    * @private
    * @desc ユーザの入力を検査: 数値
