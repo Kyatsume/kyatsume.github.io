@@ -147,6 +147,7 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
       $(self.elem).find('[data-csvcalc-total]')
         .text(total)
         .attr('data-csvcalc-total', total);
+       alert ("quotient");  
     });
     
     var monster = this;
@@ -157,7 +158,7 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
 
       // 合計を算出・表示
       var parent = $(ev.target).parents('[data-csvcalc-repeat]');
-      var totalMobs = $(parent).find('[data-csvcalc-price]').text();
+      var totalMobs = $(parent).find('[data-csvcalc-quotient]').text();
       $(parent).find('[data-csvcalc-calculate]')
         .text(totalMobs / CMobs)
         .attr('data-csvcalc-calculate', totalMobs / CMobs);
@@ -171,6 +172,7 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
       $(self.elem).find('[data-csvcalc-total]')
         .text(total)
         .attr('data-csvcalc-total', total);
+       alert ("calculate");  
     });
   },
 
