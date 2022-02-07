@@ -131,7 +131,7 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
    */
   calcTotal: function () {
     var self = this;
-    $(document.getElementById("totalMobs")).on('change', $(self.elem).find('[data-csvcalc-input]'), function (ev) {
+    $(#totalMobs).on('change', $(self.elem).find('[data-csvcalc-input]'), function (ev) {
       // バリデーションを行う
       var amount = self.validateNumber.call(self, $(ev.target).val());
       $(ev.target).val(amount); // 画面上の全角数字は、ここで半角となる。
@@ -146,7 +146,7 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
   },
   calcTotal2: function () {
     var monster = this;
-    $(document.getElementById("Total")).on('change', $(monster.elem).find('[data-csvcalc-mobsinput]'), function(ev) {
+    $(#cMobs).on('change', $(monster.elem).find('[data-csvcalc-mobsinput]'), function(ev) {
       // バリデーションを行う
       var cMobs = monster.validateNumber.call(monster, $(ev.target).val());
       $(ev.target).val(cMobs); // 画面上の全角数字は、ここで半角となる。
