@@ -131,7 +131,7 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
    */
   calcTotal: function () {
     var self = this;
-    $(document).on('change', this.calcTotal2()).find('[data-csvcalc-input]'), function (ev) {
+    $(document).on('change', $(self.elem).find('[data-csvcalc-input]'), function (ev) {
       // バリデーションを行う
       var amount = self.validateNumber.call(self, $(ev.target).val());
       $(ev.target).val(amount); // 画面上の全角数字は、ここで半角となる。
@@ -142,17 +142,6 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
       $(parent).find('[data-csvcalc-quotient]')
         .text(price / amount)
         .attr('data-csvcalc-quotient', price / amount);
-
-      // 総計を算出・表示
-      var total = 0;
-      $(self.elem).find('[data-csvcalc-sum]').each(function(idx, elem) {
-        var sum = Number($(elem).attr('data-csvcalc-sum'));
-        if (!isNaN(sum)) total += sum;
-      });
-      $(self.elem).find('[data-csvcalc-total]')
-        .text(total)
-        .attr('data-csvcalc-total', total);
-       alert ("quotient");  
     });
   },
   calcTotal2: function () {
@@ -170,17 +159,6 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
         .text(totalMobs / cMobs)
         .attr('data-csvcalc-calculate', totalMobs / cMobs);
      
-
-      // 総計を算出・表示
-      var totalMob = 99;
-      $(monster.elem).find('[data-csvcalc-quotient]').each(function(idx, elem) {
-        var qoutient = Number($(elem).attr('data-csvcalc-quotient'));
-        if (!isNaN(totalMob)) total += totalMob;
-      });
-      $(monster.elem).find('[data-csvcalc-total]')
-        .text(total)
-        .attr('data-csvcalc-total', total);
-       alert ("calculate");  
     });
   },
 
