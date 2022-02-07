@@ -39,7 +39,7 @@ function CsvCalc (elem, file, option) {
   this.setOption();
   this.showCSV();
   this.calcTotal();
-  //this.calcTotal2();
+  this.calcTotal2();
 }
 
 $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
@@ -137,7 +137,7 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
       $(ev.target).val(amount); // 画面上の全角数字は、ここで半角となる。
 
       // 合計を算出・表示
-      var parent = $(ev.target).parents('[data-csvcalc-repeat]');
+      var parent = $(ev.target).parent('[data-csvcalc-repeat]');
       var price = $(parent).find('[data-csvcalc-price]').text();
       $(parent).find('[data-csvcalc-quotient]')
         .text(price / amount)
@@ -153,7 +153,7 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
        alert ("calculate");  
 
       // 合計を算出・表示
-      var parent2 = $(ev.target).parents('[data-csvcalc-repeat]');
+      var parent2 = $(ev.target).parent('[data-csvcalc-repeat]');
       var totalMobs = $(parent2).find('[data-csvcalc-quotient]').text();
       $(parent2).find('[data-csvcalc-calculate]')
         .text(totalMobs / cMobs)
