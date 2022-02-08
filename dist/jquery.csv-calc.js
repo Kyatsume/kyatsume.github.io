@@ -131,11 +131,11 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
    */
   calcTotal: function () {
     var self = this;
-    $(document).on('change', function (ev) {
+    $(document.getElementById("totalMobs").on('change', $(monster.elem).find('[data-csvcalc-input]'), function (ev) {
       // バリデーションを行う
       var amount = self.validateNumber.call(self, $(ev.target).val());
       $(ev.target).val(amount); // 画面上の全角数字は、ここで半角となる。
-       alert ("calculate");  
+       alert ("quotient");  
       // 合計を算出・表示
       var parent = $(ev.target).parents('[data-csvcalc-repeat]');
       var price = $(parent).find('[data-csvcalc-price]').text();
@@ -153,7 +153,7 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
        alert ("calculate");  
 
       // 合計を算出・表示
-      var parent2 = $(ev.target).parents('[data-csvcalc-repeat2]');
+      var parent2 = $(ev.target).parents('[data-csvcalc-repeat]');
       var totalMobs = $(parent2).find('[data-csvcalc-quotient]').text();
       $(parent2).find('[data-csvcalc-calculate]')
         .text(totalMobs / cMobs)
