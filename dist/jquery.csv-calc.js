@@ -131,7 +131,7 @@ $.extend(CsvCalc.prototype, /** @lends CsvCalc.prototype */ {
    */
   calcTotal: function () {
     var self = this;
-    $(document.getElementById("totalMobs").on('change', $(monster.elem).find('[data-csvcalc-input]'), function (ev) {
+    $(document.getElementById("totalMobs").on('change', $(self.elem).find('[data-csvcalc-input]'), function (ev) {
       // バリデーションを行う
       var amount = self.validateNumber.call(self, $(ev.target).val());
       $(ev.target).val(amount); // 画面上の全角数字は、ここで半角となる。
