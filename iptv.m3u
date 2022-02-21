@@ -5,3 +5,5 @@ https://nhk1.mov3.co/hls/nhk.m3u8
 https://nhkworld.webcdn.stream.ne.jp/www11/nhkworld-tv/global/2003458/live.m3u8
 #EXTINF:-1 tvg-id="NHKGworldch.jp" tvg-country="JP" tvg-language="Japanese" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/NHK_World.svg/300px-NHK_World.svg.png" group-title="Animation",NHK华语视界 (720p)
 https://nhkworld.webcdn.stream.ne.jp/www11/nhkworld-tv/zh/725580/livecom_zh.m3u8
+#EXTINF:-1 tvg-id="dade.jp" tvg-country="PH" tvg-language="Japanese" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/NHK_World.svg/300px-NHK_World.svg.png" group-title="Animation",NHK华语视界 (720p)
+https://gqs2adgzsm.akamaized.net/b/0ae7b/P_2TV_NINANINO_S01E001B0(11168_ISMUSP).ism/dash/P_2TV_NINANINO_S01E001B0(11168_ISMUSP)-video=4964000-250250.dash
