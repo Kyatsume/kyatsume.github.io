@@ -30,7 +30,9 @@ http://satelliteiptv.xyz:8080/iptvpoint/85g7sjaS6t/14342
 #EXTINF:-1 tvg-id="WWEnetwork.en" tvg-country="US" tvg-language="English" tvg-logo="https://1000logos.net/wp-content/uploads/2017/05/WWE-logo-768x713.png" group-title="Educational",WWE network
 http://satelliteiptv.xyz:8080/iptvpoint/85g7sjaS6t/14404
 #EXTINF:0 tvg-country="US" tvg-logo="" group-title="Undefined",CBS HD
-http://loginto.live:80/JP1584/xuCu1Csjrs/18816
+https://cbsn-us.cbsnstream.cbsnews.com/out/v1/55a8648e8f134e82a470f83d562deeca/master_11.m3u8
+#EXTINF:0 tvg-country="US" tvg-logo="" group-title="Undefined",CBS SD
+http://vt.protoniumtv.net:1997/iptvtree2021/POAIHfsmm525adA/9441?checkedby:iptvcat.com
 
 
 
