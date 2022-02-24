@@ -9,7 +9,67 @@ https://nhkworld.webcdn.stream.ne.jp/www11/nhkworld-tv/zh/725580/livecom_zh.m3u8
 https://gqs2adgzsm.akamaized.net/b/0ae7b/P_2TV_NINANINO_S01E001B0(11168_ISMUSP).ism/dash/P_2TV_NINANINO_S01E001B0(11168_ISMUSP)-video=4964000-250250.dash
 #EXTINF:-1 tvg-id="AnimeTV.jp" tvg-country="JP" tvg-language="Japanese" tvg-logo="https://1.bp.blogspot.com/-FUSTK4Z1fQs/X8zzV_cWjHI/AAAAAAAAD6E/eNDHUFUuADsTAkTJTcT_ulbcI9-y6IisACLcBGAsYHQ/s0/ANIME%2BTV.png" group-title="Animation",Anime TV
 https://stmv1.srvif.com/animetv/animetv/playlist.m3u8
+#EXTINF:0 tvg-country="JP" tvg-logo="" group-title="Undefined",AT-X
+https://sub2.neetball.net/live/neet.m3u8?checkedby:iptvcat.net
+#EXTINF:0 tvg-country="JP" tvg-logo="" group-title="Undefined",Animax Japan (Indonesian Subs)
+http://210.210.155.35/dr9445/h/h144/01.m3u8?checkedby:iptvcat.net
+#EXTINF:0 tvg-country="JP" tvg-logo="" group-title="Undefined",Animax Japan (Vietnamese Subs)
+https://livecdn.fptplay.net/hda3/animaxport_2000.stream/.m3u8?checkedby:iptvcat.net
+#EXTINF:0 tvg-country="JP" tvg-logo="https://i.imgur.com/SQISXoD.jpg" group-title="News",NHK World Japan (1080p)
+https://nhkwlive-ojp.akamaized.net/hls/live/2003459/nhkwlive-ojp-en/index.m3u8?checkedby:iptvcat.net
+#EXTINF:0 tvg-country="JP;US" tvg-logo="https://upload.wikimedia.org/wikipedia/en/thumb/1/1c/New_Japan_Pro_Wrestling_Logo_2.svg/480px-New_Japan_Pro_Wrestling_Logo_2.svg.png" group-title="Sport;Undefined",New Japan Pro Wrestling World,NJPW World
+https://aka-amd-njpwworld-hls-enlive.akamaized.net/hls/video/njpw_en/njpw_en_channel01_3/chunklist_DVR.m3u8?checkedby:iptvcat.net
+#EXTINF:0 tvg-country="JP" tvg-logo="https://i.imgur.com/8AM9fC8.jpg" group-title="Shop;Undefined",GSTV
+https://gemstv.wide-stream.net/gemstv01/smil:gemstv01.smil/chunklist.m3u8?checkedby:iptvcat.net
+#EXTINF:0 tvg-country="AZ" tvg-logo="" group-title="Undefined",Nat Geo Wild
+http://mfe.cliptv.az/dash/Nat_Geo_Wild_HD.ism/playlist.mpd?checkedby:iptvcat.net
+#EXTINF:0 tvg-country="BE" tvg-logo="" group-title="Undefined",NAT GEO HD
+http://obsfullhd.tv:25461/speedhd.hd/wk2rl4iWB6/5258?checkedby:iptvcat.net
+#EXTINF:-1 tvg-id="MTV" tvg-country="EN" tvg-language="English" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/MTV-2021.svg/220px-MTV-2021.svg.png" group-title="Educational",MTV
+https://list.iptvcat.com/my_list/s/699916c3a4d50fc3cb14dc68000e8dea.m3u8
+#EXTINF:-1 tvg-id="WWEnetwork.en" tvg-country="US" tvg-language="English" tvg-logo="https://1000logos.net/wp-content/uploads/2017/05/WWE-logo-768x713.png" group-title="Educational",WWE network
+https://list.iptvcat.com/my_list/s/737683c16cee7ffe41f2c640a8cea125.m3u8
+#EXTINF:0 tvg-country="US" tvg-logo="" group-title="Undefined",CBS HD
+http://iptv.watchhd.cc:5050/kelevra321/UWqjWR89sRNT/294.ts
+
+
+#EXTM3U
+#EXTINF:0 tvg-country="KR" tvg-logo="https://m3u-editor.com/storage/channel-logos/07cd9d90-3cc5-11ea-9aa8-0b5bd3ba261d/92706/14090001.png" group-title="Undefined",Arirang,Arirang HD
+http://amdlive-ch01.ctnd.com.edgesuite.net/arirang_1ch/smil:arirang_1ch.smil/playlist.m3u8
+#EXTINF:0 tvg-country="KR" tvg-logo="https://i.imgur.com/5ZBxPbK.jpg" group-title="Undefined",Arirang HD
+http://amdlive.ctnd.com.edgesuite.net/arirang_1ch/smil:arirang_1ch.smil/playlist.m3u8
+#EXTINF:0 tvg-country="KR" tvg-logo="https://i.imgur.com/i7uUG2m.png" group-title="Undefined",BBS Buddhist Broadcasting
+http://bbstv.clouducs.com:1935/bbstv-live/livestream/chunklist_w1216149699.m3u8
+#EXTINF:0 tvg-country="KR" tvg-logo="https://i.imgur.com/i7uUG2m.png" group-title="Undefined",BBS Buddhist Broadcasting
+http://bbstv.clouducs.com:1935/bbstv-live/livestream/playlist.m3u8
+#EXTINF:0 tvg-country="KR" tvg-logo="https://i.imgur.com/Iy0yBaM.jpg" group-title="Undefined",CBS
+http://cbs-live.gscdn.com/cbs-live/cbs-live.stream/hasbahca.m3u8
+#EXTINF:0 tvg-country="KR" tvg-logo="https://i.imgur.com/Iy0yBaM.jpg" group-title="Undefined",CBS
+http://cbs-live.gscdn.com/cbs-live/cbs-live.stream/playlist.m3u8
+#EXTINF:0 tvg-country="KR" tvg-logo="https://m3u-editor.com/storage/channel-logos/07cd9d90-3cc5-11ea-9aa8-0b5bd3ba261d/92706/14090022.png" group-title="Undefined",CBS
+http://cbs-live.gscdn.com:1935/cbs-live/cbs-live.stream/playlist.m3u8
+#EXTINF:0 tvg-country="KR" tvg-logo="https://i.imgur.com/7K7zmoE.png" group-title="Kids",EBS Kids
+rtsp://ebsonair.ebs.co.kr/ebsutablet500k/tablet500k
+#EXTINF:0 tvg-country="KR" tvg-logo="https://i.imgur.com/QUxuHA1.png" group-title="Undefined",GCN
+http://liveko24-manminglobal3.ktcdn.co.kr/liveko24/gcnko_high/chunklist.m3u8
+#EXTINF:0 tvg-country="KR" tvg-logo="https://i.imgur.com/f1tz5fg.png" group-title="Undefined",Gugbang TV
+http://mediaworks.dema.mil.kr:1935/live_edge/cudo.sdp/playlist.m3u8
+#EXTINF:0 tvg-country="KR" tvg-logo="https://i.imgur.com/b7uMB9T.png" group-title="Undefined",KBS LiveCam DokDo
+http://kbs-dokdo.gscdn.com/dokdo_300/_definst_/dokdo_300.stream/playlist.m3u8
+#EXTINF:0 tvg-country="KR" tvg-logo="https://i.imgur.com/QMDDHd1.gif" group-title="Undefined",MTN
+http://183.110.27.87/mtnlive/_definst_/720/chunklist.m3u8
+#EXTINF:0 tvg-country="KR" tvg-logo="https://i.imgur.com/loWf3B5.jpg" group-title="Undefined",NBS Korea Agricultural Broadcasting
+https://media.joycorp.co.kr:4443/live/live_720p/playlist.m3u8
+#EXTINF:0 tvg-country="KR" tvg-logo="https://i.imgur.com/xLL7Sxm.png" group-title="Undefined",TVWorkNet
+http://live.worktv.or.kr:1935/live/wowtvlive1.sdp/playlist.m3u8
+
+
+
+
+
+
+
 #EXTINF:-1 tvg-id="NationalGeographic.en" tvg-country="AS" tvg-language="English" tvg-logo="https://i.natgeofe.com/n/e76f5368-6797-4794-b7f6-8d757c79ea5c/ng-logo-2fl.png" group-title="Educational",National Geographic
 http://51.195.44.53:8081/tv/national-geographic/chunks.m3u8
-#EXTINF:-1 tvg-id="MTV" tvg-country="EN" tvg-language="English" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/MTV-2021.svg/220px-MTV-2021.svg.png" group-title="Educational",MT
-http://unilivemtveu-lh.akamaihd.net/i/mtvno_1@346424/master.m3u8
+
+
