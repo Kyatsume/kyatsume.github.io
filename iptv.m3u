@@ -7,3 +7,7 @@ https://nhkworld.webcdn.stream.ne.jp/www11/nhkworld-tv/global/2003458/live.m3u8
 https://nhkworld.webcdn.stream.ne.jp/www11/nhkworld-tv/zh/725580/livecom_zh.m3u8
 #EXTINF:-1 tvg-id="dade.jp" tvg-country="PH" tvg-language="Japanese" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/NHK_World.svg/300px-NHK_World.svg.png" group-title="Animation",NHK华语视界 (720p)
 https://gqs2adgzsm.akamaized.net/b/0ae7b/P_2TV_NINANINO_S01E001B0(11168_ISMUSP).ism/dash/P_2TV_NINANINO_S01E001B0(11168_ISMUSP)-video=4964000-250250.dash
+#EXTINF:-1 tvg-id="AnimeTV.jp" tvg-country="JP" tvg-language="Japanese" tvg-logo="https://1.bp.blogspot.com/-FUSTK4Z1fQs/X8zzV_cWjHI/AAAAAAAAD6E/eNDHUFUuADsTAkTJTcT_ulbcI9-y6IisACLcBGAsYHQ/s0/ANIME%2BTV.png" group-title="Animation",NHK General TV (720p)
+https://stmv1.srvif.com/animetv/animetv/playlist.m3u8
+#EXTINF:-1 tvg-id="NationalGeographic.en" tvg-country="AS" tvg-language="Japanese" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/NHK%E7%B7%8F%E5%90%88%E3%83%AD%E3%82%B42020-.png/300px-NHK%E7%B7%8F%E5%90%88%E3%83%AD%E3%82%B42020-.png" group-title="Educational",National Geographic (720p)
+http://51.195.44.53:8081/tv/national-geographic/chunks.m3u8
