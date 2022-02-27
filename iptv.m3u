@@ -71,8 +71,8 @@ http://live.worktv.or.kr:1935/live/wowtvlive1.sdp/playlist.m3u8
 
 
 
-
 #EXTINF:-1 tvg-id="NationalGeographic.en" tvg-country="AS" tvg-language="English" tvg-logo="https://i.natgeofe.com/n/e76f5368-6797-4794-b7f6-8d757c79ea5c/ng-logo-2fl.png" group-title="Educational",National Geographic
 http://51.195.44.53:8081/tv/national-geographic/chunks.m3u8
 
-
+#EXTINF:-1 tvg-id="NationalGeographic.en" tvg-country="AS" tvg-language="English" tvg-logo="https://i.natgeofe.com/n/e76f5368-6797-4794-b7f6-8d757c79ea5c/ng-logo-2fl.png" group-title="Educational",buksing
+https://s7.fctelerium.com:999/hls/do28.m3u8?md5=Ees-j7Y939xWGHHd3_DMCw&expires=1645938217
