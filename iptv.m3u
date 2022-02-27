@@ -76,3 +76,205 @@ http://51.195.44.53:8081/tv/national-geographic/chunks.m3u8
 
 #EXTINF:-1 tvg-id="NationalGeographic.en" tvg-country="AS" tvg-language="English" tvg-logo="https://i.natgeofe.com/n/e76f5368-6797-4794-b7f6-8d757c79ea5c/ng-logo-2fl.png" group-title="Educational",buksing
 https://jqffpmmsrepwpnpe.wzcdn988.net:8443/hls/jkt8plj9dmn.m3u8?s=81aZhj3AbvTYSlGIx4d1Xg&e=1645952547
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",CA SPORTSNET 360
+http://ky-iptv.com:80/testtest/testtest/182076.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",CA SPORTSNET EAST
+http://ky-iptv.com:80/testtest/testtest/182077.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",CA SPORTSNET ONE
+http://ky-iptv.com:80/testtest/testtest/182078.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",CA SPORTSNET ONTARIO
+http://ky-iptv.com:80/testtest/testtest/182079.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",CA SPORTSNET_PPV
+http://ky-iptv.com:80/testtest/testtest/182083.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",CA SportsNet
+http://ky-iptv.com:80/testtest/testtest/228639.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",CA SportsNet East HD
+http://ky-iptv.com:80/testtest/testtest/228641.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",CA SportsNet NY
+http://ky-iptv.com:80/testtest/testtest/228642.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",CA SportsNet Pacific FHD
+http://ky-iptv.com:80/testtest/testtest/228645.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",CA SportsNet West FHD
+http://ky-iptv.com:80/testtest/testtest/228647.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",CA SportsNet West HD
+http://ky-iptv.com:80/testtest/testtest/228636.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",CA Sportsnet Event 1 HD
+http://ky-iptv.com:80/testtest/testtest/1699315.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",CA Sportsnet Event 2 HD
+http://ky-iptv.com:80/testtest/testtest/1699317.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",CA Sportsnet Event 3 HD
+http://ky-iptv.com:80/testtest/testtest/1699319.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",CA Sportsnet Event 4 HD
+http://ky-iptv.com:80/testtest/testtest/1699321.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",CA Sportsnet Event 5 HD
+http://ky-iptv.com:80/testtest/testtest/1699323.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",CA Sportsnet Event 6 HD
+http://ky-iptv.com:80/testtest/testtest/1699325.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",CA Sportsnet Event 7 HD
+http://ky-iptv.com:80/testtest/testtest/1699327.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",CA Sportsnet Event 8 HD
+http://ky-iptv.com:80/testtest/testtest/1699329.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",CA Sportsnet World HD
+http://ky-iptv.com:80/testtest/testtest/182080.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",CA TSN 1
+http://ky-iptv.com:80/testtest/testtest/182183.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",CA TSN 1 HD
+http://ky-iptv.com:80/testtest/testtest/228697.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",CA TSN 2
+http://ky-iptv.com:80/testtest/testtest/182184.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",CA TSN 2 HD
+http://ky-iptv.com:80/testtest/testtest/1620259.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",CA TSN 3
+http://ky-iptv.com:80/testtest/testtest/1620260.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",CA TSN 3 HD
+http://ky-iptv.com:80/testtest/testtest/182185.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",CA TSN 4
+http://ky-iptv.com:80/testtest/testtest/1620261.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",CA TSN 4 HD
+http://ky-iptv.com:80/testtest/testtest/182186.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",CA TSN 5
+http://ky-iptv.com:80/testtest/testtest/1620262.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",CA TSN 5 HD
+http://ky-iptv.com:80/testtest/testtest/182187.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",CA TSN4 HD Blackout
+http://ky-iptv.com:80/testtest/testtest/182188.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",CA TSN5 Blackout
+http://ky-iptv.com:80/testtest/testtest/182189.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",CA TSN5 HD Blackout 2
+http://ky-iptv.com:80/testtest/testtest/182190.ts?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",CAN-Sportsnet 360 (TV)(720)
+http://tv.mediame.xyz:25461/pabloseitler/f8nUScu5sb/119364?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",CAN-TSN 1 (TV)(720)
+http://tv.mediame.xyz:25461/pabloseitler/f8nUScu5sb/119368?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",CAN-TSN 2 (TV)(720)
+http://tv.mediame.xyz:25461/pabloseitler/f8nUScu5sb/119369?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",CAN-TSN 3 (TV)(720)
+http://tv.mediame.xyz:25461/pabloseitler/f8nUScu5sb/119370?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",CAN-TSN 5 (TV)(720)
+http://tv.mediame.xyz:25461/pabloseitler/f8nUScu5sb/119372?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SPORTSNET 360
+http://mlsh1.com:2086/malcolm1/malcolm/6253?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SPORTSNET 360
+http://mains.best:2086/htyrvtit/3650427/3227?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SPORTSNET 360
+http://loginto.live:80/JP1584/xuCu1Csjrs/594?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SPORTSNET EAST
+http://vmp343.ddnsking.com:80/thomas2/thomas2/3066?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SPORTSNET EAST
+http://mlsh1.com:2086/malcolm1/malcolm/6254?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SPORTSNET EAST
+http://mains.best:2086/htyrvtit/3650427/3226?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SPORTSNET EAST
+http://loginto.live:80/JP1584/xuCu1Csjrs/595?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SPORTSNET ONE
+http://mlsh1.com:2086/malcolm1/malcolm/6255?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SPORTSNET ONE
+http://vmp343.ddnsking.com:80/thomas2/thomas2/3065?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SPORTSNET ONE
+http://mains.best:2086/htyrvtit/3650427/3225?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SPORTSNET ONE
+http://loginto.live:80/JP1584/xuCu1Csjrs/593?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SPORTSNET ONTARIO
+http://mlsh1.com:2086/malcolm1/malcolm/6256?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SPORTSNET ONTARIO
+http://mains.best:2086/htyrvtit/3650427/3224?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SPORTSNET ONTARIO
+http://loginto.live:80/JP1584/xuCu1Csjrs/4830?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SPORTSNET ONTARIO
+http://vmp343.ddnsking.com:80/thomas2/thomas2/3062?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SPORTSNET ONTARIO HD
+http://obsfullhd.tv:25461/speedhd.hd/wk2rl4iWB6/42180?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SPORTSNET PACIFIC
+http://mlsh1.com:2086/malcolm1/malcolm/6257?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SPORTSNET PACIFIC
+http://vmp343.ddnsking.com:80/thomas2/thomas2/3061?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SPORTSNET PACIFIC
+http://mains.best:2086/htyrvtit/3650427/3223?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SPORTSNET PACIFIC
+http://loginto.live:80/JP1584/xuCu1Csjrs/596?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SPORTSNET PPV
+http://vmp343.ddnsking.com:80/thomas2/thomas2/564812?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SPORTSNET WEST
+http://mlsh1.com:2086/malcolm1/malcolm/6258?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SPORTSNET WEST
+http://mains.best:2086/htyrvtit/3650427/3222?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SPORTSNET WEST
+http://loginto.live:80/JP1584/xuCu1Csjrs/597?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SPORTSNET WORLD
+http://mlsh1.com:2086/malcolm1/malcolm/6259?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SPORTSNET WORLD
+http://mains.best:2086/htyrvtit/3650427/3221?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SPORTSNET WORLD
+http://loginto.live:80/JP1584/xuCu1Csjrs/598?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SportsNet 360 HD
+http://obsfullhd.tv:25461/speedhd.hd/wk2rl4iWB6/42176?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SportsNet East HD
+http://obsfullhd.tv:25461/speedhd.hd/wk2rl4iWB6/42177?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SportsNet One HD
+http://obsfullhd.tv:25461/speedhd.hd/wk2rl4iWB6/42179?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SportsNet_360
+http://smartestv.vip:2095/ABHVYOP/2387998104/4798?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SportsNet_One
+http://smartestv.vip:2095/ABHVYOP/2387998104/4800?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SportsNet_Ontario
+http://smartestv.vip:2095/ABHVYOP/2387998104/4799?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SportsNet_Pacific
+http://smartestv.vip:2095/ABHVYOP/2387998104/4805?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",SportsNet_West
+http://smartestv.vip:2095/ABHVYOP/2387998104/4801?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",TSN 1
+http://mlsh1.com:2086/malcolm1/malcolm/6272?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",TSN 1
+http://mains.best:2086/htyrvtit/3650427/3202?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",TSN 1
+http://iptvfree1.com:8080/live:david.romok/4bteskwwjs342/92?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",TSN 1
+http://vmp343.ddnsking.com:80/thomas2/thomas2/3055?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",TSN 1
+http://loginto.live:80/JP1584/xuCu1Csjrs/600?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",TSN 2
+http://mlsh1.com:2086/malcolm1/malcolm/6273?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",TSN 2
+http://mains.best:2086/htyrvtit/3650427/3201?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",TSN 2
+http://vmp343.ddnsking.com:80/thomas2/thomas2/3056?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",TSN 2
+http://loginto.live:80/JP1584/xuCu1Csjrs/601?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",TSN 3
+http://mlsh1.com:2086/malcolm1/malcolm/6274?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",TSN 3
+http://mains.best:2086/htyrvtit/3650427/8802?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",TSN 3
+http://vmp343.ddnsking.com:80/thomas2/thomas2/3057?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",TSN 3
+http://loginto.live:80/JP1584/xuCu1Csjrs/602?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",TSN 3 FHD
+http://ultra-premium-pro.xyz:8080/Userxcambioxplay2022@@/mpkS6CTPCw/40458?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",TSN 4
+http://mlsh1.com:2086/malcolm1/malcolm/6275?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",TSN 4
+http://vmp343.ddnsking.com:80/thomas2/thomas2/3058?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",TSN 4
+http://mains.best:2086/htyrvtit/3650427/3199?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",TSN 4
+http://loginto.live:80/JP1584/xuCu1Csjrs/603?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",TSN 4 HD
+http://iptvfree1.com:8080/live:david.romok/4bteskwwjs342/95?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",TSN 5
+http://iptvfree1.com:8080/live:david.romok/4bteskwwjs342/96?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",TSN 5
+http://vmp343.ddnsking.com:80/thomas2/thomas2/3059?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",TSN 5
+http://mlsh1.com:2086/malcolm1/malcolm/6276?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",TSN 5
+http://mains.best:2086/htyrvtit/3650427/3198?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",TSN 5
+http://loginto.live:80/JP1584/xuCu1Csjrs/604?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Sport",TSN 5 HD
+http://ultra-premium-pro.xyz:8080/Userxcambioxplay2022@@/mpkS6CTPCw/22616?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",TSN_1
+http://smartestv.vip:2095/ABHVYOP/2387998104/4791?checkedby:iptvcat.com
+#EXTINF:0 tvg-country="CA" tvg-logo="" group-title="Undefined",TSN_2
+http://smartestv.vip:2095/ABHVYOP/2387998104/4792?checkedby:iptvcat.com
+
+
