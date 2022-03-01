@@ -7,7 +7,7 @@ http://51.79.193.108:8080/hls/j00033/index.m3u8
 https://nhkworld.webcdn.stream.ne.jp/www11/nhkworld-tv/global/2003458/live.m3u8
 #EXTINF:-1 tvg-id="NHKWorldJapan.jp" tvg-country="JP" tvg-language="Japanese" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/NHK_World.svg/300px-NHK_World.svg.png" group-title="Animation",NHK world japan HD
 https://nhkworld.webcdn.stream.ne.jp/www11/nhkworld-tv/global/263941/live_high2_s.m3u8
-#EXTINF:-1 tvg-id="NHKWorldJapan.jp" tvg-country="JP" tvg-language="Japanese" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/NHK_World.svg/300px-NHK_World.svg.png" group-title="Animation",NHK world japan HD
+#EXTINF:-1 tvg-id="NHKWorldJapan.jp" tvg-country="JP" tvg-language="Japanese" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/NHK_World.svg/300px-NHK_World.svg.png" group-title="Animation",NHK world japanTV
 https://nhkworld.webcdn.stream.ne.jp/www11/nhkworld-tv/global/263941/live_stv_s.m3u8
 #EXTINF:-1 tvg-id="NHKGworldch.jp" tvg-country="JP" tvg-language="Japanese" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/NHK_World.svg/300px-NHK_World.svg.png" group-title="Animation",NHK华语视界
 https://nhkworld.webcdn.stream.ne.jp/www11/nhkworld-tv/zh/725580/livecom_zh.m3u8
@@ -17,6 +17,8 @@ https://gqs2adgzsm.akamaized.net/b/0ae7b/P_2TV_NINANINO_S01E001B0(11168_ISMUSP).
 https://stmv1.srvif.com/animetv/animetv/playlist.m3u8
 #EXTINF:0 tvg-country="JP" tvg-logo="" group-title="Undefined",AT-X
 https://sub2.neetball.net/live/neet.m3u8?checkedby:iptvcat.net
+#EXTINF:0 tvg-country="JP" tvg-logo="" group-title="Undefined",Animax Japan
+http://211.21.12.236:11935/live/cs25.stream/playlist.m3u8
 #EXTINF:0 tvg-country="JP" tvg-logo="" group-title="Undefined",Animax Japan (Indonesian Subs)
 http://210.210.155.35/dr9445/h/h144/01.m3u8
 #EXTINF:0 tvg-country="JP" tvg-logo="" group-title="Undefined",Animax Japan (Vietnamese Subs)
@@ -72,4 +74,6 @@ https://media.joycorp.co.kr:4443/live/live_720p/playlist.m3u8
 https://jqffpmmsrepwpnpe.wzcdn988.net:8443/hls/jkt8plj9dmn.m3u8?s=81aZhj3AbvTYSlGIx4d1Xg&e=1645952547
 
 
+#EXTINF:-1 tvg-id="MTV" tvg-country="EN" tvg-language="English" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/MTV-2021.svg/220px-MTV-2021.svg.png" group-title="Educational",MTV Originals
 
+https://service-stitcher.clusters.pluto.tv/stitch/hls/channel/5f1aadf373bed3000794d1d7/master.m3u8?terminate=false&deviceType=web&deviceMake=web&deviceModel=web&sid=300&deviceId=5f1aadf373bed3000794d1d7&deviceVersion=DNT&appVersion=DNT&deviceDNT=0&userId=&advertisingId=&deviceLat=41.1167&deviceLon=1.2500&app_name=&appName=web&buildVersion=&appStoreUrl=&architecture=&includeExtendedEvents=false&marketingRegion=ES&serverSideAds=false
