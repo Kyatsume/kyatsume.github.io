@@ -79,4 +79,4 @@ https://service-stitcher.clusters.pluto.tv/stitch/hls/channel/5f1aadf373bed30007
 #EXTINF:-1 tvg-id="FailArmy.en" tvg-country="EN" tvg-language="English" tvg-logo="hhttps://cdn.shopify.com/s/files/1/0041/9194/4817/files/FA_RGB_STACKED-LOGO_HORIZONTAL_410x.png?v=1623863723" group-title="Educational",Fail Army
 http://stitcher-ipv4.pluto.tv/v1/stitch/embed/hls/channel/5f5141c1605ddf000748eb1b/master.m3u8?advertisingId={PSID}&appVersion=unknown&deviceDNT={TARGETOPT}&deviceId={PSID}&deviceLat=0&deviceLon=0&deviceMake=samsung&deviceModel=samsung&deviceType=samsung-tvplus&deviceVersion=unknown&embedPartner=samsung-tvplus&profileFloor=&profileLimit=&samsung_app_domain={APP_DOMAIN}&samsung_app_name={APP_NAME}&us_privacy=1YNY
 #EXTINF:0 tvg-country="US" tvg-logo="" group-title="Undefined",CBS (KCAL- Los Angeles CA)
-http://mains.services:2086/kixy2030/u8zC9nvB69/90234?checkedby:iptvcat.com
+http://mains.services:2086/kixy2030/u8zC9nvB69/90233
