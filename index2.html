@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Playstation Search</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <audio autoplay loop volume="0.1">
+    <source src="https://koalaxpanda.000webhostapp.com/playstationAPI/vendor/music/kokoronashi.mp3" type="audio/mpeg">
+  </audio>
+  <style>
+ html {
+  height: 100%;
+}
+    body {
+      background-image: url('https://images.hdqwalls.com/download/2b-nier-automata-4k-2020-ho-1920x1200.jpg');
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-attachment: fixed;
+      background-position: center center;
+      margin: 0;
+
+    }
+        main {
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+
+    }
+    form {
+      position: fixed;
+      top: 20px;
+      left: 40%;
+      z-index: 999999;
+    }
+    #psform {
+      position: fixed;
+      top: 57px;
+      left: 42%;
+      z-index: 999999;
+    }
+    #response {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      border-collapse: collapse;
+      z-index:9999;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      z-index:999;
+    }
+    th,
+    td {
+      padding: 10px;
+      text-align: left;
+      border-style: dashed;
+      border-color: #7383915c;
+      background-color: #5579993d;
+    }
+    th {
+      background-color: #79707054;
+    }
+    .title {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .price {
+      font-size: 18px;
+      color: white;
+    }
+
+
+  </style>
+</head>
+<body>
+    <div>
+  <form onsubmit="getData(); return false;">
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" onkeypress="if (event.keyCode == 13) { getData(); return false; }">
+    <button type="submit">Search</button>
+  </form>
+		<form onsubmit="getpsData(); return false;">
+			<button id="psplus" type="submit">PS+</button>
+		</form>
+		</div>
+  <div id="response"></div>
+
+  <script src="https://koalaxpanda.000webhostapp.com/playstationAPI/vendor/search.js"></script>
+
+
+   <script>
+</script> 
+</body>
+</html>
