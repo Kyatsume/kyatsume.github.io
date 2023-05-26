@@ -1,14 +1,61 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Playstation Search</title>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <audio autoplay loop volume="0.1">
-    <source src="https://koalaxpanda.000webhostapp.com/playstationAPI/vendor/music/kokoronashi.mp3" type="audio/mpeg">
-  </audio>
-  <style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {font-family: Arial;}
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+  position:fixed;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 1px 1px;
+  transition: 0.3s;
+  font-size: 17px;
+  border-style:outset;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  -webkit-animation: fadeEffect 1s;
+  animation: fadeEffect 1s;
+  margin-top: 50px;
+}
+
+/* Fade in tabs */
+@-webkit-keyframes fadeEffect {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@keyframes fadeEffect {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
  html {
   height: 100%;
 }
@@ -28,9 +75,6 @@
 
     }
     form {
-      position: fixed;
-      top: 20px;
-      left: 40%;
       z-index: 999999;
     }
     #psform {
@@ -72,25 +116,154 @@
     }
 
 
-  </style>
+</style>
 </head>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <body>
-    <div>
+<h1>PandaXKoala</h1>
+<h2>Grade VI - Crystal</h2>
+
+<div class="tab">
+  <button class="tablinks" onclick="openCity(event, 'PSPLUS+')">PS Plus</button>
+  <button class="tablinks" onclick="openCity(event, 'GAMESEARCH')">Game Search</button>
+  <button class="tablinks" onclick="openCity(event, 'GAMELIST')">Game List</button>
+  <button class="tablinks" onclick="openCity(event, 'HOWTO')">How TO</button>
+</div>
+
+<div id="PSPLUS+" class="tabcontent">
+<script>
+	  $(document).ready(function() {
+            $.ajax({
+                url: "https://koalaxpanda.000webhostapp.com/playstationAPI/vendor/psplus.php", // Replace with the path to your PHP script
+                type: "GET",
+                success: function(response) {
+                    $('#psresponse').html(response);
+                }
+            });
+        });
+		</script>
+  <div id="psresponse"></div>
+</div>
+
+<div id="GAMESEARCH" class="tabcontent">
   <form onsubmit="getData(); return false;">
     <label for="title">Title:</label>
     <input type="text" id="title" name="title" onkeypress="if (event.keyCode == 13) { getData(); return false; }">
     <button type="submit">Search</button>
   </form>
-		<form onsubmit="getpsData(); return false;">
-			<button id="psplus" type="submit">PS+</button>
-		</form>
-		</div>
   <div id="response"></div>
 
   <script src="search.js"></script>
+</div>
+
+<div id="GAMELIST" class="tabcontent">
+<script>
+	  $(document).ready(function() {
+            $.ajax({
+                url: "https://koalaxpanda.000webhostapp.com/playstationAPI/vendor/pricelist2.php", // Replace with the path to your PHP script
+                type: "GET",
+                success: function(response) {
+                    $('#response').html(response);
+                }
+            });
+        });
+		</script>
+  <div id="response"></div>
+  <h3>not working yet</h3>
+ 
+</div>
+
+<div id="HOWTO" class="tabcontent">
+<script>
+	  $(document).ready(function() {
+            $.ajax({
+                url: "https://koalaxpanda.000webhostapp.com/playstationAPI/vendor/fb.php", // Replace with the path to your PHP script
+                type: "GET",
+                success: function(response) {
+                    $('#fbresponse').html(response);
+                }
+            });
+        });
+		</script>
+<iframe src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2Fpermalink.php%3Fstory_fbid%3Dpfbid0za9XYRY19JAprLcXeBtKHPRGUFHyQvDDSTKZCRGWBq87bMDZpHpT5Lkf64zEf25fl%26id%3D100093206702459&show_text=true&width=500" width="500" height="207" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>	
+  <div id="fbresponse"></div>
+</div>
+
+<script>
+function openCity(evt, cityName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
 
 
-   <script>
-</script> 
+</script>
+ 	<style>
+	h1 h2{
+	position:fixed;
+	}
+		body {
+			background-image: url('https://images.hdqwalls.com/download/2b-nier-automata-4k-2020-ho-1920x1200.jpg');
+			background-repeat: no-repeat;
+			background-size: cover;
+			background-attachment: fixed;
+			background-position: center center;
+		}
+		table {
+			border-collapse: collapse;
+			width: 100%;
+			max-width: 400px;
+			margin: 0 auto;
+			top: 30px;
+
+					}
+		th, td {
+			padding: 10px;
+			text-align: left;
+			border-style: dashed;
+            border-color: #7383915c;
+            background-color: #5579993d;
+		}
+		th {
+			background-color: #79707054;
+		}
+		.title {
+			font-size: 16px;
+			font-weight: bold;
+		}
+		.Platform {
+			font-size: 10px;
+			font-weight: bold;
+		}
+		.title {
+			font-size: 16px;
+			font-weight: bold;
+		}
+		.Type {
+			font-size: 10px;
+			font-weight: bold;
+		}
+		.Cusa {
+			font-size: 10px;
+			font-weight: bold;
+		}
+		.price {
+			font-size: 10px;
+			color: black;
+		}
+		.spacer
+{
+    width: 100%;
+    height: 95px;
+}
+	</style>  
 </body>
-</html>
+</html> 
