@@ -121,6 +121,19 @@ body {font-family: Arial;}
 </head>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <body>
+<marquee id="marquee" direction="left" scrollamount="3">
+  <?php
+    $file = fopen("https://koalaxpanda.000webhostapp.com/playstationAPI/vendor/howto.php", "r"); // open the file in read mode
+    if ($file) {
+      while (($line = fgets($file)) !== false) {
+        echo htmlspecialchars($line) . "<br>"; // display each line and add a line break
+      }
+      fclose($file); // close the file
+    } else {
+      echo "Unable to open file!";
+    }
+  ?>
+</marquee>
 <h1>PandaXKoala</h1>
 <h2>PS+ and game list with prices</h2>
 
