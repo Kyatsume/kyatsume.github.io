@@ -12,7 +12,7 @@ function getData() {
 
   // Make the AJAX request
   $.ajax({
-    url: "https://koalaxpanda.000webhostapp.com/playstationAPI/vendor/get_data.php",
+    url: "https://koalaxpanda.000webhostapp.com/playstationAPI/vendor/get_data2.php",
     type: "GET",
     data: { title: title },
     success: function(response) {
