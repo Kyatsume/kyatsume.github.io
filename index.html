@@ -193,7 +193,19 @@ hello!
 		</script>
 	<div id="fbresponse"></div>
 </div>
-
+<div id="PSPLUScontent" class="tabcontent">
+<script>
+	  $(document).ready(function() {
+            $.ajax({
+                url: "https://koalaxpanda.000webhostapp.com/playstationAPI/vendor/psplusdata.php", // Replace with the path to your PHP script
+                type: "GET",
+                success: function(response) {
+                    $('#psdataresponse').html(response);
+                }
+            });
+        });
+		</script>
+  <div id="psdataresponse"></div>
 <script>
 function openCity(evt, cityName) {
   var i, tabcontent, tablinks;
