@@ -3,11 +3,10 @@ function changeButtonText(text) {
   document.querySelector('button[type="submit"]').innerHTML = text;
 }
 
-<script>
   function goToPage(page) {
     window.location.href = 'https://koalaxpanda.000webhostapp.com/playstationAPI/vendor/feed.php?list=' + page;
   }
-</script>
+
 
 function getData() {
   // Change the text of the search button to "Loading..."
