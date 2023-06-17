@@ -5,7 +5,7 @@ function changeButtonText(text) {
 
 <script>
   function goToPage(page) {
-    window.location.href = 'feed.php?list=' + page;
+    window.location.href = 'https://koalaxpanda.000webhostapp.com/playstationAPI/vendor/feed.php?list=' + page;
   }
 </script>
 
