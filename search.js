@@ -4,7 +4,7 @@ function changeButtonText(text) {
 }
 
   function goToPage(page) {
-    window.location.href = 'https://koalaxpanda.000webhostapp.com/playstationAPI/vendor/feed.php?list=' + page;
+    window.location.href = 'https://koalaxpanda.000webhostapp.com/playstationAPI/vendor/feeds.php?list=' + page;
   }
 
 
