@@ -3,6 +3,12 @@ function changeButtonText(text) {
   document.querySelector('button[type="submit"]').innerHTML = text;
 }
 
+<script>
+  function goToPage(page) {
+    window.location.href = 'feed.php?list=' + page;
+  }
+</script>
+
 function getData() {
   // Change the text of the search button to "Loading..."
   changeButtonText("Loading...");
