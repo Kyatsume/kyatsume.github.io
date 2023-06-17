@@ -154,6 +154,8 @@ hello!
   <button class="tablinks" onclick="openCity(event, 'GAMESEARCH')">Game Search</button>
   <button class="tablinks" onclick="openCity(event, 'GAMELIST')">PS+ comparison</button>
   <button class="tablinks" onclick="openCity(event, 'HOWTO')">How TO</button>
+	<button class="tablinks" onclick="openCity(event, 'feeds')">ps store feeds</button>
+	
 </div>
 
 <div id="PSPLUS+" class="tabcontent">
@@ -212,6 +214,21 @@ hello!
 	<div id="fbresponse"></div>
 </div>
 
+	<div id="feeds" class="tabcontent">
+<script>
+	  $(document).ready(function() {
+            $.ajax({
+                url: "https://koalaxpanda.000webhostapp.com/playstationAPI/vendor/feeds.php", // Replace with the path to your PHP script
+                type: "GET",
+                success: function(response) {
+                    $('#psfeeds').html(response);
+                }
+            });
+        });
+		</script>
+	<div id="psfeeds"></div>
+</div>
+	
 <script>
 function openCity(evt, cityName) {
   var i, tabcontent, tablinks;
