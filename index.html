@@ -157,8 +157,8 @@ hello!
 	<button class="tablinks" onclick="openCity(event, 'feeds')">Currently on Sale</button>
 	
 </div>
-<script>
-<div id="PSPLUS+" class="tabcontent">
+
+<div id="PSPLUS+" class="tabcontent"><script>
 	  $(document).ready(function() {
             $.ajax({
                 url: "https://koalaxpanda.000webhostapp.com/playstationAPI/vendor/psplus.php", // Replace with the path to your PHP script
@@ -172,6 +172,7 @@ hello!
   <div id="psresponse"></div>
 </div>
 <div id="GAMESEARCH" class="tabcontent">
+	<script>
   <form onsubmit="getData(); return false;">
     <label for="title">Title:</label>
     <input type="text" id="title" name="title" onkeypress="if (event.keyCode == 13) { getData(); return false; }">
