@@ -11,7 +11,7 @@
     <script>
         function getCurrentTime() {
             var date = new Date();
-            var options = { timeZone: 'Asia/Manila', hour12: false };
+            var options = { timeZone: 'Asia/Manila', hour12: true };
             var currentTime = date.toLocaleTimeString('en-US', options);
             document.getElementById('current-time').textContent = 'Current Time: ' + currentTime;
         }
