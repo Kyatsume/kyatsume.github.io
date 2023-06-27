@@ -5,8 +5,8 @@
 </head>
 <body>
     <h>Current Time: <?php echo (new DateTime('now', new DateTimeZone('America/New_York')))->format('H:i'); ?>
-        </div>/h1>
-
-    <iframe src="https://koalaxpanda.000webhostapp.com/kmovies.php"></iframe>
-</body>
+        </h1>
+     <?php
+    include 'https://koalaxpanda.000webhostapp.com/kmovies.php';
+    ?>
 </html>
