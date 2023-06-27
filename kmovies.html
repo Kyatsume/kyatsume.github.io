@@ -20,11 +20,11 @@
         // Update the time every second
         setInterval(getCurrentTime, 1000);
     </script>
-<div id="frame" class="tabcontent">
+<div id="frame">
 <script>
 	  $(document).ready(function() {
             $.ajax({
-                url: "https://koalaxpanda.000webhostapp.com/kmovies.php", // Replace with the path to your PHP script
+                url: "https://koalaxpanda.000webhostapp.com/kmovies.php", 
                 type: "GET",
                 success: function(response) {
                     $('#kmovie').html(response);
