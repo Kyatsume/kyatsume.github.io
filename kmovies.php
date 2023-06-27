@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Call PHP Script with JavaScript</title>
+    <title>kMovies 24/7</title>
 </head>
 <body>
     <h1>Current Time: <?php echo (new DateTime('now', new DateTimeZone('Asia/Manila')))->format('H:i'); ?></h1>
