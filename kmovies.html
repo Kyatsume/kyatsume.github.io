@@ -4,23 +4,38 @@
     <title>kMovies 24/7</title>
 </head>
 <body>
-    <h1>Current Time: <?php echo (new DateTime('now', new DateTimeZone('Asia/Manila')))->format('H:i'); ?></h1>
-
-    <button onclick="loadPHP()">Load PHP Output</button>
-    
-    <div id="output"></div>
+        <h1 id="current-time"></h1>
 
     <script>
-        function loadPHP() {
-            fetch('jhttps://koalaxpanda.000webhostapp.com/kmovies.php')
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('output').innerHTML = data;
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+        function getCurrentTime() {
+            var date = new Date();
+            var options = { timeZone: 'Asia/Manila', hour12: false };
+            var currentTime = date.toLocaleTimeString('en-US', options);
+            document.getElementById('current-time').textContent = 'Current Time: ' + currentTime;
         }
+
+        // Call the function to display the current time immediately
+        getCurrentTime();
+
+        // Update the time every second
+        setInterval(getCurrentTime, 1000);
     </script>
+<div id="frame" class="tabcontent">
+<script>
+	  $(document).ready(function() {
+            $.ajax({
+                url: "https://koalaxpanda.000webhostapp.com/kmovies.php", // Replace with the path to your PHP script
+                type: "GET",
+                success: function(response) {
+                    $('#kmovie').html(response);
+                }
+            });
+        });
+	 </script>
+  <div id="kmovie"></div>
+
+</div>
 </body>
 </html>
+
+
