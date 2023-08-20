@@ -227,6 +227,7 @@ hello! welcome to my library.! game image is clickable..
 </div>
 
 <script>
+var correctPassword = '';
     // Show password popup when the page loads
     window.addEventListener("load", function() {
         openPasswordPopup();
@@ -316,7 +317,7 @@ function toggleContent() {
     var contentDiv = document.getElementsByClassName('tab')[0];
     var formDiv = document.getElementsByTagName('form')[0];
     var hideButton = document.querySelector('.hidebutton');
-	if (correctedPassword === submittedPassword){
+	if (submittedPassword === correctPassword){
     if (contentDiv.style.display === 'none') {
         contentDiv.style.display = 'block';
         formDiv.style.display = 'block';
