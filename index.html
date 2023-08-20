@@ -9,7 +9,16 @@
 <video autoplay muted loop id="myVideo">
   <source src="https://www.w3schools.com/html/movie.mp4" type="video/mp4">
 </video>
-
+<div class="overlay" id="passwordOverlay">
+    <div class="password-popup">
+        <h2>Enter Password</h2>
+        <form id="popupPasswordForm">
+            <label for="popupPassword">Password:</label>
+            <input type="password" id="popupPassword" name="popupPassword">
+            <button type="button" id="popupSubmit">Submit</button>
+        </form>
+    </div>
+</div>
 <marquee id="marquee" direction="left" scrollamount="3">
 hello! welcome to my library.! game image is clickable.. 
 </marquee>
@@ -48,25 +57,42 @@ hello! welcome to my library.! game image is clickable..
 </div>
 
 <script>
-// Add an event listener to the form submission
-document.getElementById("passwordForm").addEventListener("submit", function(event) {
-    event.preventDefault(); // Prevent the form from submitting normally
+    // Show password popup when the page loads
+    window.addEventListener("load", function() {
+        openPasswordPopup();
+    });
 
-    // Define the correct password
-    var correctPassword = "testpassword";
-
-    // Get the submitted password
-    var submittedPassword = document.getElementById("password").value;
-
-    // Compare the submitted password with the correct password
-    if (submittedPassword === correctPassword) {
-        // Passwords match, execute the AJAX requests
-        executeAjaxRequests();
-    } else {
-        alert("Incorrect password. Access denied.");
+    // Function to open password popup
+    function openPasswordPopup() {
+        document.getElementById("passwordOverlay").style.display = "flex";
     }
-});
 
+    // Function to close password popup
+    function closePasswordPopup() {
+        document.getElementById("passwordOverlay").style.display = "none";
+    }
+
+    // Add an event listener to the popup form submission
+    document.getElementById("popupSubmit").addEventListener("click", function(event) {
+        event.preventDefault();
+
+        // Define the correct password
+        var correctPassword = "your_correct_password_here";
+
+        // Get the submitted password
+        var submittedPassword = document.getElementById("popupPassword").value;
+
+        // Compare the submitted password with the correct password
+        if (submittedPassword === correctPassword) {
+            // Passwords match, execute the desired action (e.g., show content)
+            executeAjaxRequests();
+
+            // Close the password popup
+            closePasswordPopup();
+        } else {
+            alert("Incorrect password. Access denied.");
+        }
+    });
 // Function to execute AJAX requests
 function executeAjaxRequests() {
     $.ajax({
