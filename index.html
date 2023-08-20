@@ -170,7 +170,7 @@ top: 20px;
 <body>
 <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Login</button>
 
-<div id="id01" class="modal" id="passwordOverlay">
+<div id="id01" class="modal">
   
 
     <div class="container">
@@ -234,12 +234,12 @@ hello! welcome to my library.! game image is clickable..
 
     // Function to open password popup
     function openPasswordPopup() {
-        document.getElementById("passwordOverlay").style.display = "flex";
+        document.getElementById("id01").style.display = "flex";
     }
 
     // Function to close password popup
     function closePasswordPopup() {
-        document.getElementById("passwordOverlay").style.display = "none";
+        document.getElementById("id01").style.display = "none";
     }
 
     // Add an event listener to the popup form submission
