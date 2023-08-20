@@ -1,172 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-body {font-family: Arial;}
-
-/* Style the tab */
-.tab {
-top: 20px;
-  overflow: hidden;
-  border: 1px solid #ccc;
-  background-color: transparent;
-  position:fixed;
-}
-    #myVideo {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: -1;
-    }
-	
-/* Style the buttons inside the tab */
-.tab button {
-  background-color: inherit;
-  float: left;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  padding: 1px 1px;
-  transition: 0.3s;
-  font-size: 11px;
-  border-style:outset;
-}
-
-/* Change background color of buttons on hover */
-.tab button:hover {
-  background-color: #ddd;
-}
-
-/* Create an active/current tablink class */
-.tab button.active {
-  background-color: #ccc;
-}
-
-/* Style the tab content */
-.tabcontent {
-  display: none;
-  padding: 6px 12px;
-  -webkit-animation: fadeEffect 1s;
-  animation: fadeEffect 1s;
-  margin-top: 50px;
-}
-
-/* Fade in tabs */
-@-webkit-keyframes fadeEffect {
-  from {opacity: 0;}
-  to {opacity: 1;}
-}
-
-@keyframes fadeEffect {
-  from {opacity: 0;}
-  to {opacity: 1;}
-}
-
- html {
-  height: 100%;
-}
-    body {
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-attachment: fixed;
-      background-position: center center;
-      margin: 0;
-	    color:white;
-	    background-image: url('https://wallpaperaccess.com/download/horizon-forbidden-west-4063079');
-	    
-    }
-        main {
-      height: 100%;
-      margin: 0;
-      overflow: hidden;
-
-    }
-    form {
-      z-index: 999999;
-	    position: fixed;
-    }
-    #psform {
-      position: fixed;
-      top: 57px;
-      left: 42%;
-      z-index: 999999;
-    }
-    #response {
-      width: 100%;
-      max-width: 500px;
-      margin: 0 auto;
-      border-collapse: collapse;
-      z-index:9999;
-	    color:white;
-    }
-#psdataresponse {
-      width: 100%;
-      max-width: 500px;
-      margin: 0 auto;
-      border-collapse: collapse;
-      z-index:9999;
-	    color:white;
-    }
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      z-index:999;
-    }
-    th,
-    td {
-      padding: 10px;
-      text-align: left;
-      border-style: dashed;
-      border-color: #7383915c;
-      background-color: #5579993d;
-	    color:white;
-    }
-    th {
-      background-color: #79707054;
-    }
-    .title {
-      font-size: 24px;
-      font-weight: bold;
-    }
-    .price {
-      font-size: 18px;
-      color: white;
-    }
-.tablinks {
-	color: #c92200;
-	font-size: 16px;
-	border-radius: 5px;
-	border: solid 1px #e65f44;
-	padding: 4px 3px;
-	text-shadow: 1px 1px 0px #ded17c;
-	box-shadow: inset 1px 1px 2px 0px #f9eca0;
-	text-decoration: none;
-	cursor: pointer;
-	position: relative;
-	overflow: hidden;
-	font-family: Georgia;
-	font-weight: bold;
-	background: linear-gradient(180deg, #f0cb11 29%, #f2ab1e 62%);
-	display: inline-block;
-	vertical-align: middle;
-}
-.tablinks:hover {
-	background: linear-gradient(180deg, #f2ab1e 29%, #f0cb11 62%);
-}
-.tablinks-text {
-	position: relative;
-	display: inline-block;
-
-}
-
-</style>
+    <title>Password Protected Page</title>
+    <!-- Include jQuery library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <body>
+<video autoplay muted loop id="myVideo">
+  <source src="https://www.w3schools.com/html/movie.mp4" type="video/mp4">
+</video>
+
 <marquee id="marquee" direction="left" scrollamount="3">
 hello! welcome to my library.! game image is clickable.. 
 </marquee>
@@ -175,22 +18,11 @@ hello! welcome to my library.! game image is clickable..
   <button class="tablinks" onclick="openCity(event, 'GAMESEARCH')">Search</button>
   <button class="tablinks" onclick="openCity(event, 'PSPLUS+')">PS+</button>
   <button class="tablinks" onclick="openCity(event, 'GAMELIST')">comparison</button>
-	<button class="tablinks" onclick="openCity(event, 'feeds')">Playstation Deals</button>
-  <button class="tablinks" onclick="openCity(event, 'HOWTO')">myPage</button>	
-	
+  <button class="tablinks" onclick="openCity(event, 'feeds')">Playstation Deals</button>
+  <button class="tablinks" onclick="openCity(event, 'HOWTO')">myPage</button>
 </div>
 
-<div id="PSPLUS+" class="tabcontent"><script>
-	  $(document).ready(function() {
-            $.ajax({
-                url: "https://koalaxpanda.000webhostapp.com/playstationAPI/vendor/psplus.php", // Replace with the path to your PHP script
-                type: "GET",
-                success: function(response) {
-                    $('#psresponse').html(response);
-                }
-            });
-        });
-		</script>
+<div id="PSPLUS+" class="tabcontent">
   <div id="psresponse"></div>
 </div>
 <div id="GAMESEARCH" class="tabcontent">
@@ -204,83 +36,104 @@ hello! welcome to my library.! game image is clickable..
 </div>
 
 <div id="GAMELIST" class="tabcontent">
-<script>
-	  $(document).ready(function() {
-            $.ajax({
-                url: "https://koalaxpanda.000webhostapp.com/playstationAPI/vendor/psplusdata.php", // Replace with the path to your PHP script
-                type: "GET",
-                success: function(response) {
-                    $('#gamelistresponse').html(response);
-                }
-            });
-        });
-	 </script>
   <div id="gamelistresponse"></div>
-
 </div>
 
 <div id="HOWTO" class="tabcontent">
-<script>
-	  $(document).ready(function() {
-            $.ajax({
-                url: "https://koalaxpanda.000webhostapp.com/playstationAPI/vendor/fb.php", // Replace with the path to your PHP script
-                type: "GET",
-                success: function(response) {
-                    $('#fbresponse').html(response);
-                }
-            });
-        });
-		</script>
-	<div id="fbresponse"></div>
+  <div id="fbresponse"></div>
 </div>
 
-	<div id="feeds" class="tabcontent">
-<script>
-	  $(document).ready(function() {
-            $.ajax({
-                url: "https://koalaxpanda.000webhostapp.com/playstationAPI/vendor/feeds.php", // Replace with the path to your PHP script
-                type: "GET",
-                success: function(response) {
-                    $('#psfeeds').html(response);
-                }
-            });
-        });
-		</script>
-	<div id="psfeeds"></div>
+<div id="feeds" class="tabcontent">
+  <div id="psfeeds"></div>
 </div>
-	
+
 <script>
+// Add an event listener to the form submission
+document.getElementById("passwordForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent the form from submitting normally
+
+    // Define the correct password
+    var correctPassword = "testpassword";
+
+    // Get the submitted password
+    var submittedPassword = document.getElementById("password").value;
+
+    // Compare the submitted password with the correct password
+    if (submittedPassword === correctPassword) {
+        // Passwords match, execute the AJAX requests
+        executeAjaxRequests();
+    } else {
+        alert("Incorrect password. Access denied.");
+    }
+});
+
+// Function to execute AJAX requests
+function executeAjaxRequests() {
+    $.ajax({
+        url: "https://koalaxpanda.000webhostapp.com/playstationAPI/vendor/psplus.php",
+        type: "GET",
+        success: function(response) {
+            $("#psresponse").html(response);
+        }
+    });
+
+    $.ajax({
+        url: "https://koalaxpanda.000webhostapp.com/playstationAPI/vendor/psplusdata.php",
+        type: "GET",
+        success: function(response) {
+            $("#gamelistresponse").html(response);
+        }
+    });
+
+    $.ajax({
+        url: "https://koalaxpanda.000webhostapp.com/playstationAPI/vendor/fb.php",
+        type: "GET",
+        success: function(response) {
+            $("#fbresponse").html(response);
+        }
+    });
+
+    $.ajax({
+        url: "https://koalaxpanda.000webhostapp.com/playstationAPI/vendor/feeds.php",
+        type: "GET",
+        success: function(response) {
+            $("#psfeeds").html(response);
+        }
+    });
+}
+
 function openCity(evt, cityName) {
-  var i, tabcontent, tablinks;
-  tabcontent = document.getElementsByClassName("tabcontent");
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-  }
-  tablinks = document.getElementsByClassName("tablinks");
-  for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].className = tablinks[i].className.replace(" active", "");
-  }
-  document.getElementById(cityName).style.display = "block";
-  evt.currentTarget.className += " active";
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(cityName).style.display = "block";
+    evt.currentTarget.className += " active";
 }
+
 function toggleContent() {
-  var contentDiv = document.getElementsByClassName('tab')[0];
-  var formDiv = document.getElementsByTagName('form')[0];
-  var hideButton = document.querySelector('.hidebutton');
+    var contentDiv = document.getElementsByClassName('tab')[0];
+    var formDiv = document.getElementsByTagName('form')[0];
+    var hideButton = document.querySelector('.hidebutton');
 
-  if (contentDiv.style.display === 'none') {
-    contentDiv.style.display = 'block';
-    formDiv.style.display = 'block';
-    hideButton.textContent = 'hide';
-  } else {
-    contentDiv.style.display = 'none';
-    formDiv.style.display = 'none';
-    hideButton.textContent = 'show';
-  }
+    if (contentDiv.style.display === 'none') {
+        contentDiv.style.display = 'block';
+        formDiv.style.display = 'block';
+        hideButton.textContent = 'hide';
+    } else {
+        contentDiv.style.display = 'none';
+        formDiv.style.display = 'none';
+        hideButton.textContent = 'show';
+    }
 }
-
-
 </script>
+
+<style>
  	<style>
 	#marquee {
           position: fixed;
@@ -344,6 +197,6 @@ function toggleContent() {
     width: 100%;
     height: 95px;
 }
-	</style>  
+</style>
 </body>
-</html> 
+</html>
