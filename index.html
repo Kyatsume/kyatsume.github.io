@@ -168,7 +168,7 @@ top: 20px;
 </style>
 </head>
 <body>
-<button onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Login</button>
+<button name="login" onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Login</button>
 
 <div id="id01" class="modal">
   
@@ -177,7 +177,7 @@ top: 20px;
       <label for="psw"><b>Password</b></label>
       <input type="password" placeholder="Enter Password" id="psw" name="psw" required>
         
-      <button type="submit" id="popupSubmit">Login</button>
+      <button type="submit" id="popupSubmit" name="login">Login</button>
       <label>
         <input type="checkbox" checked="checked" name="remember"> Remember me
       </label>
@@ -208,7 +208,7 @@ hello! welcome to my library.! game image is clickable..
   <form onsubmit="getData(); return false;">
     <label for="title">Title:</label>
     <input type="text" id="title" name="title" onkeypress="if (event.keyCode == 13) { getData(); return false; }">
-    <button type="submit">Search</button>
+    <button type="submit" id="login">Search</button>
   </form>
   <div id="response"></div>
   <script src="search.js"></script>
@@ -415,7 +415,7 @@ input[type=text], input[type=password] {
 }
 
 /* Set a style for all buttons */
-button {
+button .login{
   background-color: #04AA6D;
   color: white;
   padding: 14px 20px;
