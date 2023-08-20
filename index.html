@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Password Protected Page</title>
+    <title>YoruXPanda: This page is owned by Yoru</title>
     <!-- Include jQuery library -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<style>
@@ -305,7 +305,7 @@ function toggleContent() {
     var contentDiv = document.getElementsByClassName('tab')[0];
     var formDiv = document.getElementsByTagName('form')[0];
     var hideButton = document.querySelector('.hidebutton');
-
+	if (correctedPassword == submittedPassword){
     if (contentDiv.style.display === 'none') {
         contentDiv.style.display = 'block';
         formDiv.style.display = 'block';
@@ -315,6 +315,7 @@ function toggleContent() {
         formDiv.style.display = 'none';
         hideButton.textContent = 'show';
     }
+	}
 }
 </script>
 
