@@ -305,7 +305,7 @@ function toggleContent() {
     var contentDiv = document.getElementsByClassName('tab')[0];
     var formDiv = document.getElementsByTagName('form')[0];
     var hideButton = document.querySelector('.hidebutton');
-	if (correctedPassword == submittedPassword){
+	if (correctedPassword === submittedPassword){
     if (contentDiv.style.display === 'none') {
         contentDiv.style.display = 'block';
         formDiv.style.display = 'block';
