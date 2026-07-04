@@ -15,6 +15,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>K'yatsume M3U IPTV Player</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.7/hls.min.js"></script>
+<script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;background:#f6f8fa;color:#24292f;line-height:1.5;height:100vh;overflow:hidden;}
@@ -130,7 +131,7 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
     <div id="urlBar">
       <input id="urlInput" type="url" spellcheck="false" autocomplete="off"
         placeholder="Paste M3U/M3U8 URL here…"
-        value="https://raw.githubusercontent.com/Kyatsume/kyatsume.github.io/refs/heads/main/iptv.m3u8">
+        value="https://kyatsume.github.io/iptv.m3u8">
       <button class="btn btn-primary" id="loadBtn" onclick="Player.load()">▶ Load</button>
       <label class="btn btn-sm" title="Load from local .m3u file" style="cursor:pointer;">
         📁 File<input type="file" id="fileInput" accept=".m3u,.m3u8,.txt" style="display:none">
@@ -205,16 +206,16 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
  *
  * Completely client-side. No data leaves the browser.
  */
-const Player = (() => {
+
   'use strict';
 
-  // ── State ──────────────────────────────────────────────────────────────────
   const STATE = {
-    all: [],          // all parsed channels
-    filtered: [],     // after search/group/fav filter
-    shown: 0,         // how many rendered so far
-    active: null,     // currently playing channel object
-    hls: null,        // active HLS.js instance
+    all: [],
+    filtered: [],
+    shown: 0,
+    active: null,
+    hls: null,
+    dash: null,        // DASH.js instance
     favIds: new Set(tryParseJSON(localStorage.getItem('xiptv_favs'), [])),
     groupFilter: '',
     searchQuery: '',
@@ -239,7 +240,6 @@ const Player = (() => {
 
   function $(id) { return document.getElementById(id); }
 
-  // ── Toast ──────────────────────────────────────────────────────────────────
   function toast(msg, type = 'info', duration = 3000) {
     const el = document.createElement('div');
     el.className = `toast ${type}`;
@@ -251,7 +251,7 @@ const Player = (() => {
     }, duration);
   }
 
-  // ── M3U Parser ─────────────────────────────────────────────────────────────
+  // ── Enhanced M3U Parser (supports KODIPROP) ─────────────────────────────
   function parseM3U(text) {
     const lines = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
     if (!lines[0] || !lines[0].trim().startsWith('#EXTM3U')) {
@@ -261,18 +261,20 @@ const Player = (() => {
 
     const result = [];
     let pending = null;
+    let kodiprop = {};
 
     for (let i = 1; i < lines.length; i++) {
       const line = lines[i].trim();
       if (!line) continue;
 
       if (line.startsWith('#EXTINF:')) {
-        // Parse attributes from the tag
+        // Reset KODIPROP for new entry
+        kodiprop = {};
+        
         const tvgId    = line.match(/tvg-id="([^"]*)"/)?.[1]      ?? '';
         const tvgName  = line.match(/tvg-name="([^"]*)"/)?.[1]    ?? '';
         const tvgLogo  = line.match(/tvg-logo="([^"]*)"/)?.[1]    ?? '';
         const tvgGroup = line.match(/group-title="([^"]*)"/)?.[1] ?? 'Uncategorized';
-        // Title is everything after the last comma
         const commaIdx = line.lastIndexOf(',');
         const title = commaIdx !== -1 ? line.slice(commaIdx + 1).trim() : '';
         pending = {
@@ -281,24 +283,49 @@ const Player = (() => {
           title: title,
           logo:  tvgLogo,
           group: tvgGroup || 'Uncategorized',
+          kodiprop: {},
         };
+      } else if (line.startsWith('#KODIPROP:')) {
+        // Parse KODIPROP tags
+        const propLine = line.replace('#KODIPROP:', '').trim();
+        if (propLine.includes('=')) {
+          const [key, ...valParts] = propLine.split('=');
+          const val = valParts.join('=');
+          if (key === 'inputstream.adaptive.license_key') {
+            kodiprop.licenseKey = val;
+          } else if (key === 'inputstream.adaptive.license_type') {
+            kodiprop.licenseType = val;
+          } else if (key === 'inputstream.adaptive.common_headers') {
+            kodiprop.headers = val;
+          } else if (key === 'inputstream.adaptive.manifest_headers') {
+            kodiprop.manifestHeaders = val;
+          }
+        }
       } else if (!line.startsWith('#')) {
-        // Any non-comment line following #EXTINF is treated as the stream URL
         if (pending) {
-          result.push({
-            ...pending,
-            url: line,
-            // Stable unique key: combination of id+url hash avoids duplicate issues
-            uid: `${pending.id || pending.name}__${result.length}`,
-          });
+          pending.kodiprop = { ...kodiprop };
+          pending.url = line;
+          pending.uid = `${pending.id || pending.name}__${result.length}`;
+          
+          // Detect stream type
+          if (line.endsWith('.mpd') || line.includes('/manifest.mpd')) {
+            pending.streamType = 'dash';
+          } else if (line.endsWith('.m3u8') || line.includes('/playlist.m3u8')) {
+            pending.streamType = 'hls';
+          } else {
+            pending.streamType = 'direct';
+          }
+          
+          result.push(pending);
           pending = null;
         } else if (line.startsWith('http') || line.startsWith('//')) {
-          // URL without #EXTINF (bare playlist)
           result.push({
             id: '', name: line, title: line,
             logo: '', group: 'Uncategorized',
             url: line,
             uid: `__bare_${result.length}`,
+            streamType: 'direct',
+            kodiprop: {},
           });
         }
       }
@@ -306,7 +333,184 @@ const Player = (() => {
     return result;
   }
 
-  // ── Fetch / Load ───────────────────────────────────────────────────────────
+  // ── Parse custom headers from KODIPROP ──────────────────────────────────
+  function parseHeaders(headerString) {
+    const headers = {};
+    if (!headerString) return headers;
+    const pairs = headerString.split('&');
+    pairs.forEach(pair => {
+      const [key, ...valParts] = pair.split('=');
+      if (key && valParts.length) {
+        headers[decodeURIComponent(key)] = decodeURIComponent(valParts.join('='));
+      }
+    });
+    return headers;
+  }
+
+  // ── Playback with DASH/DRM Support ──────────────────────────────────────
+  function playChannel(ch) {
+    STATE.active = ch;
+
+    // Update active class
+    document.querySelectorAll('.ch-item').forEach(el => {
+      el.classList.toggle('active', el.dataset.uid === ch.uid);
+    });
+
+    const video = $('videoEl');
+    const errBanner = $('errorBanner');
+    errBanner.style.display = 'none';
+
+    // Cleanup old players
+    if (STATE.hls) {
+      STATE.hls.destroy();
+      STATE.hls = null;
+    }
+    if (STATE.dash) {
+      STATE.dash.reset();
+      STATE.dash = null;
+    }
+    video.pause();
+    video.removeAttribute('src');
+    video.load();
+
+    $('placeholder').style.display = 'none';
+    video.style.display = 'block';
+    const overlay = $('playerOverlay');
+    overlay.style.display = 'flex';
+    $('nowPlaying').textContent = ch.name || ch.title || 'Unknown';
+    $('nowGroup').textContent = ch.group || '';
+
+    const url = ch.url;
+    const streamType = ch.streamType || 'direct';
+    
+    // Parse headers from KODIPROP
+    const headers = parseHeaders(ch.kodiprop?.headers || '');
+    console.log('Stream type:', streamType, 'Headers:', headers);
+
+    // ── DASH (MPD) with DRM ──────────────────────────────────────────────
+    if (streamType === 'dash' || url.includes('.mpd')) {
+      if (typeof dashjs !== 'undefined') {
+        try {
+          const dash = dashjs.MediaPlayer().create();
+          STATE.dash = dash;
+          
+          // Configure DASH
+          dash.initialize(video, url, true);
+          
+          // Set custom headers if provided
+          if (Object.keys(headers).length > 0) {
+            dash.setXHRRequestHeaders(headers);
+          }
+          
+          // Handle DRM (ClearKey)
+          if (ch.kodiprop?.licenseKey) {
+            const licenseKey = ch.kodiprop.licenseKey;
+            const [keyId, key] = licenseKey.split(':');
+            
+            // ClearKey license server setup
+            const clearkeyConfig = {
+              'clearkey': {
+                'keySystemId': 'org.w3.clearkey',
+                'keys': [
+                  {
+                    'keyId': keyId,
+                    'key': key
+                  }
+                ]
+              }
+            };
+            
+            dash.setProtectionData(clearkeyConfig);
+            console.log('ClearKey DRM configured:', keyId, key);
+          }
+          
+          // Set additional manifest headers if needed
+          if (ch.kodiprop?.manifestHeaders) {
+            const manifestHeaders = parseHeaders(ch.kodiprop.manifestHeaders);
+            if (Object.keys(manifestHeaders).length > 0) {
+              dash.setXHRRequestHeaders({
+                ...headers,
+                ...manifestHeaders
+              });
+            }
+          }
+          
+          // Handle playback events
+          dash.on(dashjs.MediaPlayer.events.PLAYBACK_LOADED, () => {
+            console.log('DASH loaded successfully');
+            video.play().catch(e => console.log('Autoplay prevented:', e));
+          });
+          
+          dash.on(dashjs.MediaPlayer.events.ERROR, (e) => {
+            console.error('DASH error:', e);
+            if (e.error === 'capability' || e.error === 'manifestError') {
+              showStreamError('DASH error: ' + (e.message || 'Unknown error'));
+            }
+          });
+          
+        } catch (e) {
+          console.error('DASH initialization error:', e);
+          showStreamError('DASH error: ' + e.message);
+        }
+      } else {
+        showStreamError('DASH.js library not loaded');
+      }
+      
+    // ── HLS (M3U8) ────────────────────────────────────────────────────────
+    } else if (streamType === 'hls' || /\.m3u8(\?|$)/i.test(url)) {
+      if (Hls.isSupported()) {
+        const hls = new Hls({
+          enableWorker: true,
+          lowLatencyMode: true,
+          maxBufferLength: 30,
+          maxMaxBufferLength: 60,
+          fragLoadingTimeOut: 20000,
+          manifestLoadingTimeOut: 15000,
+          xhrSetup: (xhr, url) => {
+            // Apply custom headers
+            Object.keys(headers).forEach(key => {
+              xhr.setRequestHeader(key, headers[key]);
+            });
+          }
+        });
+        STATE.hls = hls;
+        hls.loadSource(url);
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          video.play().catch(() => {});
+        });
+        hls.on(Hls.Events.ERROR, (_, data) => {
+          if (data.fatal) {
+            showStreamError(data.type + ': ' + data.details);
+            hls.destroy();
+            STATE.hls = null;
+          }
+        });
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = url;
+        video.play().catch(() => {});
+      }
+      
+    // ── Direct (MP4, etc.) ──────────────────────────────────────────────
+    } else {
+      video.src = url;
+      video.play().catch(() => {});
+    }
+
+    video.onerror = () => {
+      if (video.error) showStreamError('Video error: ' + video.error.message);
+    };
+  }
+
+  function showStreamError(msg) {
+    const b = $('errorBanner');
+    b.textContent = '⚠ ' + msg;
+    b.style.display = 'block';
+    setTimeout(() => { b.style.display = 'none'; }, 7000);
+    toast('Stream error: ' + msg, 'error', 5000);
+  }
+
+  // ── Load and Ingest Functions ────────────────────────────────────────────
   async function load() {
     const url = $('urlInput').value.trim();
     if (!url) { toast('Enter a playlist URL first', 'warn'); return; }
@@ -323,7 +527,6 @@ const Player = (() => {
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       text = await r.text();
     } catch (err) {
-      // Try CORS proxy as fallback
       try {
         toast('Direct fetch blocked — retrying via CORS proxy…', 'warn', 3000);
         const r2 = await fetch(CORS_PROXY + encodeURIComponent(url), { cache: 'no-cache' });
@@ -363,7 +566,6 @@ const Player = (() => {
     STATE.searchQuery = '';
     STATE.favOnly = false;
 
-    // Reset header filter UI
     $('favToggleBtn').textContent = '☆ Favorites';
     $('favToggleBtn').classList.remove('active-fav');
     $('searchInput').value = '';
@@ -381,7 +583,10 @@ const Player = (() => {
     badge.className = 'badge badge-green';
     badge.style.display = '';
 
-    toast(`✅ Loaded ${channels.length.toLocaleString()} channels`, 'success');
+    // Count stream types
+    const dashCount = channels.filter(c => c.streamType === 'dash').length;
+    const hlsCount = channels.filter(c => c.streamType === 'hls').length;
+    toast(`✅ Loaded ${channels.length.toLocaleString()} channels (${dashCount} DASH, ${hlsCount} HLS)`, 'success');
   }
 
   function setLoadingUI(loading) {
@@ -392,7 +597,7 @@ const Player = (() => {
       : '▶ Load';
   }
 
-  // ── Group Dropdown ─────────────────────────────────────────────────────────
+  // ── Filter & Render (same as original) ──────────────────────────────────
   function buildGroupDropdown() {
     const groups = [...new Set(STATE.all.map(c => c.group))].sort((a, b) =>
       a.localeCompare(b, undefined, { sensitivity: 'base' })
@@ -400,11 +605,9 @@ const Player = (() => {
     const sel = $('categorySelect');
     sel.innerHTML = `<option value="">All Groups (${groups.length})</option>` +
       groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join('');
-    // Store raw group array for index-based lookup
     sel._groups = groups;
   }
 
-  // ── Filter & Search ────────────────────────────────────────────────────────
   function applyFilter() {
     const q = STATE.searchQuery.toLowerCase();
     STATE.filtered = STATE.all.filter(c => {
@@ -450,7 +653,6 @@ const Player = (() => {
     }
   }
 
-  // ── Render Channel List ────────────────────────────────────────────────────
   function renderList(reset) {
     const box = $('channelList');
     if (reset) { box.innerHTML = ''; }
@@ -463,7 +665,6 @@ const Player = (() => {
       return;
     }
 
-    // Remove existing load-more button before appending new items
     const oldMore = box.querySelector('.load-more-btn');
     if (oldMore) oldMore.remove();
 
@@ -488,7 +689,14 @@ const Player = (() => {
     div.className = 'ch-item' + (isActive ? ' active' : '');
     div.dataset.uid = ch.uid;
 
-    // Logo element
+    // Stream type indicator
+    const typeMap = {
+      'dash': '📡',
+      'hls': '▶️',
+      'direct': '🎬'
+    };
+    const typeIcon = typeMap[ch.streamType] || '▶️';
+
     if (ch.logo) {
       const img = document.createElement('img');
       img.className = 'ch-logo';
@@ -498,7 +706,7 @@ const Player = (() => {
       const fallback = document.createElement('div');
       fallback.className = 'ch-logo-placeholder';
       fallback.style.display = 'none';
-      fallback.textContent = '📺';
+      fallback.textContent = typeIcon;
       img.addEventListener('error', () => {
         img.style.display = 'none';
         fallback.style.display = 'flex';
@@ -508,11 +716,10 @@ const Player = (() => {
     } else {
       const ph = document.createElement('div');
       ph.className = 'ch-logo-placeholder';
-      ph.textContent = '📺';
+      ph.textContent = typeIcon;
       div.appendChild(ph);
     }
 
-    // Info
     const info = document.createElement('div');
     info.className = 'ch-info';
     const nameEl = document.createElement('div');
@@ -520,12 +727,11 @@ const Player = (() => {
     nameEl.textContent = ch.name || ch.title || 'Unknown';
     const groupEl = document.createElement('div');
     groupEl.className = 'ch-group';
-    groupEl.textContent = ch.group;
+    groupEl.textContent = ch.group + (ch.streamType === 'dash' ? ' 📡' : '');
     info.appendChild(nameEl);
     info.appendChild(groupEl);
     div.appendChild(info);
 
-    // Fav button — uses event listener, not inline onclick, so uid is safe
     const favBtn = document.createElement('button');
     favBtn.className = 'fav-btn' + (isFav ? ' on' : '');
     favBtn.title = isFav ? 'Remove from favorites' : 'Add to favorites';
@@ -553,84 +759,7 @@ const Player = (() => {
     }
     localStorage.setItem('xiptv_favs', JSON.stringify([...STATE.favIds]));
     updateMeta();
-    if (STATE.favOnly) applyFilter(); // re-filter if showing favs only
-  }
-
-  // ── Playback ───────────────────────────────────────────────────────────────
-  function playChannel(ch) {
-    STATE.active = ch;
-
-    // Update active class
-    document.querySelectorAll('.ch-item').forEach(el => {
-      el.classList.toggle('active', el.dataset.uid === ch.uid);
-    });
-
-    const video = $('videoEl');
-    const errBanner = $('errorBanner');
-    errBanner.style.display = 'none';
-
-    // Tear down previous HLS instance
-    if (STATE.hls) {
-      STATE.hls.destroy();
-      STATE.hls = null;
-    }
-    video.pause();
-    video.removeAttribute('src');
-    video.load();
-
-    $('placeholder').style.display = 'none';
-    video.style.display = 'block';
-    const overlay = $('playerOverlay');
-    overlay.style.display = 'flex';
-    $('nowPlaying').textContent = ch.name || ch.title || 'Unknown';
-    $('nowGroup').textContent = ch.group || '';
-
-    const url = ch.url;
-    const isHLS = /\.m3u8(\?|$)/i.test(url) || /\/live\//i.test(url);
-
-    if (isHLS && Hls.isSupported()) {
-      const hls = new Hls({
-        enableWorker: true,
-        lowLatencyMode: true,
-        maxBufferLength: 30,
-        maxMaxBufferLength: 60,
-        fragLoadingTimeOut: 20000,
-        manifestLoadingTimeOut: 15000,
-      });
-      STATE.hls = hls;
-      hls.loadSource(url);
-      hls.attachMedia(video);
-      hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        video.play().catch(() => {});
-      });
-      hls.on(Hls.Events.ERROR, (_, data) => {
-        if (data.fatal) {
-          showStreamError(data.type + ': ' + data.details);
-          hls.destroy();
-          STATE.hls = null;
-        }
-      });
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      // Native HLS — Safari
-      video.src = url;
-      video.play().catch(() => {});
-    } else {
-      // Direct MP4 / other
-      video.src = url;
-      video.play().catch(() => {});
-    }
-
-    video.onerror = () => {
-      if (video.error) showStreamError('Video error: ' + video.error.message);
-    };
-  }
-
-  function showStreamError(msg) {
-    const b = $('errorBanner');
-    b.textContent = '⚠ ' + msg;
-    b.style.display = 'block';
-    setTimeout(() => { b.style.display = 'none'; }, 7000);
-    toast('Stream error: ' + msg, 'error', 5000);
+    if (STATE.favOnly) applyFilter();
   }
 
   // ── Player Controls ────────────────────────────────────────────────────────
@@ -645,7 +774,7 @@ const Player = (() => {
 
   async function togglePiP() {
     const v = $('videoEl');
-    if (!v.src && !STATE.hls) { toast('Nothing is playing', 'warn'); return; }
+    if (!v.src && !STATE.hls && !STATE.dash) { toast('Nothing is playing', 'warn'); return; }
     try {
       if (document.pictureInPictureElement) await document.exitPictureInPicture();
       else await v.requestPictureInPicture();
@@ -655,6 +784,7 @@ const Player = (() => {
   // ── Clear ──────────────────────────────────────────────────────────────────
   function clear() {
     if (STATE.hls) { STATE.hls.destroy(); STATE.hls = null; }
+    if (STATE.dash) { STATE.dash.reset(); STATE.dash = null; }
     const v = $('videoEl');
     v.pause();
     v.removeAttribute('src');
@@ -677,7 +807,7 @@ const Player = (() => {
     $('playlistBadge').style.display = 'none';
     $('clearBtn').style.display = 'none';
     $('favToggleBtn').style.display = 'none';
-    $('urlInput').value = 'https://iptv-org.github.io/iptv/index.m3u';
+    $('urlInput').value = 'https://kyatsume.github.io/iptv.m3u8';
 
     toast('Playlist cleared', 'info', 2000);
   }
@@ -698,7 +828,7 @@ const Player = (() => {
     }
   });
 
-  // ── Wire up non-IIFE events ────────────────────────────────────────────────
+  // ── Wire up events ────────────────────────────────────────────────────────
   $('urlInput').addEventListener('keydown', e => { if (e.key === 'Enter') load(); });
   $('fileInput').addEventListener('change', function() { loadFile(this); });
   $('searchInput').addEventListener('input', function() { search(this.value); });
