@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  K'yatsume M3U IPTV Player - Fixed Mixed Content & DASH Errors
+  K'yatsume M3U IPTV Player - GitHub Pages Compatible
   Copyright (C) 2025 K'yatsume
   Licensed under GNU General Public License v3.0
 -->
@@ -195,7 +195,8 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
 
 <script>
 /*
- * K'yatsume M3U IPTV Player - Fixed Mixed Content & DASH Errors
+ * K'yatsume M3U IPTV Player - GitHub Pages Compatible
+ * Uses CORS proxy to handle HTTP streams from HTTPS pages
  * Copyright (C) 2025 K'yatsume — GPL-3.0 License
  */
 (function() {
@@ -215,7 +216,20 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
     favOnly: false,
   };
   const PAGE_SIZE = 60;
-  const CORS_PROXY = 'https://corsproxy.io/?';
+  
+  // Multiple CORS proxies for redundancy
+  const PROXIES = [
+    'https://corsproxy.io/?',
+    'https://api.allorigins.win/raw?url=',
+    'https://cors-anywhere.herokuapp.com/'
+  ];
+  let currentProxyIndex = 0;
+
+  function getNextProxy() {
+    const proxy = PROXIES[currentProxyIndex % PROXIES.length];
+    currentProxyIndex++;
+    return proxy;
+  }
 
   // ── Helpers ────────────────────────────────────────────────────────────────
   function tryParseJSON(str, fallback) {
@@ -244,14 +258,15 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
     }, duration);
   }
 
-  // ── Fix Mixed Content: Convert HTTP to HTTPS ─────────────────────────────
+  // ── Fix Mixed Content: Proxy HTTP URLs ──────────────────────────────────
   function fixMixedContent(url) {
     if (!url) return url;
-    // If page is HTTPS and URL starts with http://, try to upgrade to https://
+    // If page is HTTPS and URL starts with http://, proxy it
     if (window.location.protocol === 'https:' && url.startsWith('http://')) {
-      const httpsUrl = url.replace('http://', 'https://');
-      console.log('Upgraded HTTP to HTTPS:', url, '→', httpsUrl);
-      return httpsUrl;
+      const proxy = getNextProxy();
+      const proxiedUrl = proxy + encodeURIComponent(url);
+      console.log('Proxying HTTP URL:', url, '→', proxiedUrl);
+      return proxiedUrl;
     }
     return url;
   }
@@ -306,7 +321,8 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
       } else if (!line.startsWith('#')) {
         if (pending) {
           pending.kodiprop = { ...kodiprop };
-          // Fix mixed content for the URL
+          // Store original URL and proxied URL separately
+          pending.originalUrl = line;
           pending.url = fixMixedContent(line);
           pending.uid = `${pending.id || pending.name}__${result.length}`;
           
@@ -324,6 +340,7 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
           result.push({
             id: '', name: line, title: line,
             logo: '', group: 'Uncategorized',
+            originalUrl: line,
             url: fixMixedContent(line),
             uid: `__bare_${result.length}`,
             streamType: 'direct',
@@ -361,7 +378,7 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
     }
   }
 
-  // ── Playback with Fixed Mixed Content & DASH Errors ──────────────────────
+  // ── Playback with Proxy Support ──────────────────────────────────────────
   function playChannel(ch) {
     STATE.active = ch;
 
@@ -395,39 +412,48 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
     $('nowPlaying').textContent = ch.name || ch.title || 'Unknown';
     $('nowGroup').textContent = ch.group || '';
 
-    // Fix mixed content for the stream URL
-    const url = fixMixedContent(ch.url);
+    // Use the already-proxied URL
+    const url = ch.url;
     const streamType = ch.streamType || 'direct';
     const headers = parseHeaders(ch.kodiprop?.headers || '');
     console.log('Stream type:', streamType, 'URL:', url);
 
-    // ── DASH (MPD) with Fixed Error Handling ──────────────────────────────
+    // ── DASH (MPD) with Proxy Support ──────────────────────────────────────
     if (streamType === 'dash' || url.includes('.mpd')) {
       if (typeof dashjs !== 'undefined') {
         try {
           const dash = dashjs.MediaPlayer().create();
           STATE.dash = dash;
           
-          // Set up error handling BEFORE initialization
+          // Set up error handling
           safeDashOn(dash, 'ERROR', function(e) {
             console.warn('DASH event error:', e);
             if (e && e.error === 'capabilityError') {
               return;
             }
             if (e && (e.error === 'manifestError' || e.error === 'downloadError')) {
-              showStreamError('DASH error: ' + (e.message || 'Manifest load failed'));
+              // Try with a different proxy
+              if (ch.originalUrl && ch.originalUrl.startsWith('http://')) {
+                const newProxy = getNextProxy();
+                const newUrl = newProxy + encodeURIComponent(ch.originalUrl);
+                toast('Retrying with different proxy...', 'warn', 3000);
+                dash.initialize(video, newUrl, true);
+              } else {
+                showStreamError('DASH error: ' + (e.message || 'Manifest load failed'));
+              }
             }
           });
           
-          // Initialize with proper error handling
+          // Initialize
           try {
             dash.initialize(video, url, true);
           } catch(initError) {
             console.error('DASH init error:', initError);
-            // Try with CORS proxy as fallback
-            const proxyUrl = CORS_PROXY + encodeURIComponent(url);
-            toast('Retrying DASH via CORS proxy...', 'warn', 3000);
-            dash.initialize(video, proxyUrl, true);
+            // Try original URL without proxy as fallback
+            if (ch.originalUrl) {
+              toast('Retrying with direct URL...', 'warn', 3000);
+              dash.initialize(video, ch.originalUrl, true);
+            }
           }
           
           // Set custom headers
@@ -471,13 +497,12 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
             } catch(e) {}
           }
           
-          // Playback loaded event
+          // Playback events
           safeDashOn(dash, 'PLAYBACK_LOADED', function() {
             console.log('DASH loaded');
             video.play().catch(() => {});
           });
           
-          // Playback started event
           safeDashOn(dash, 'PLAYBACK_STARTED', function() {
             console.log('DASH playback started');
           });
@@ -557,18 +582,33 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
     toast('Fetching playlist…', 'info', 2000);
 
     let text = null;
+    // Reset proxy index for fresh attempt
+    currentProxyIndex = 0;
+    
     try {
       const r = await fetch(url, { cache: 'no-cache' });
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       text = await r.text();
     } catch (err) {
-      try {
-        toast('Direct fetch blocked — retrying via CORS proxy…', 'warn', 3000);
-        const r2 = await fetch(CORS_PROXY + encodeURIComponent(url), { cache: 'no-cache' });
-        if (!r2.ok) throw new Error(`Proxy HTTP ${r2.status}`);
-        text = await r2.text();
-      } catch (err2) {
-        toast('Failed to fetch playlist: ' + err2.message, 'error', 6000);
+      // Try multiple proxies
+      let success = false;
+      for (let i = 0; i < PROXIES.length; i++) {
+        try {
+          const proxy = PROXIES[i];
+          toast(`Trying proxy ${i+1}/${PROXIES.length}...`, 'warn', 2000);
+          const r2 = await fetch(proxy + encodeURIComponent(url), { cache: 'no-cache' });
+          if (r2.ok) {
+            text = await r2.text();
+            success = true;
+            break;
+          }
+        } catch(e) {
+          console.log(`Proxy ${i+1} failed:`, e);
+        }
+      }
+      
+      if (!success) {
+        toast('Failed to fetch playlist with all proxies', 'error', 6000);
         setLoadingUI(false);
         return;
       }
