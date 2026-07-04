@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  K'yatsume M3U IPTV Player - Fixed CORS Proxy Support
+  K'yatsume M3U IPTV Player - Fixed: Only proxy video streams, not images
   Copyright (C) 2025 K'yatsume
   Licensed under GNU General Public License v3.0
 -->
@@ -12,7 +12,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.7/hls.min.js"></script>
 <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
 <style>
-/* ... styles (same as before) ... */
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;background:#f6f8fa;color:#24292f;line-height:1.5;height:100vh;overflow:hidden;}
 #app{display:flex;flex-direction:column;height:100vh;}
@@ -196,7 +195,7 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
 
 <script>
 /*
- * K'yatsume M3U IPTV Player - Fixed CORS Proxy Support
+ * K'yatsume M3U IPTV Player - Fixed: Only proxy video streams, not images
  * Copyright (C) 2025 K'yatsume — GPL-3.0 License
  */
 (function() {
@@ -217,7 +216,7 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
   };
   const PAGE_SIZE = 60;
   
-  // Use only reliable CORS proxies
+  // Only use reliable CORS proxies
   const PROXIES = [
     'https://corsproxy.io/?',
     'https://api.allorigins.win/raw?url=',
@@ -257,16 +256,35 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
     }, duration);
   }
 
-  // ── Fix Mixed Content: Better Proxy Handling ─────────────────────────────
+  // ── Fix Mixed Content: Only proxy video streams, NOT images ──────────────
   function fixMixedContent(url) {
     if (!url) return url;
-    // If page is HTTPS and URL starts with http://, proxy it
+    // Only proxy if:
+    // 1. Page is HTTPS
+    // 2. URL starts with http://
+    // 3. URL looks like a video stream (contains .mpd, .m3u8, or manifest)
     if (window.location.protocol === 'https:' && url.startsWith('http://')) {
-      const proxy = getNextProxy();
-      // Don't double-encode - the proxy will handle it
-      const proxiedUrl = proxy + encodeURIComponent(url);
-      console.log('Proxying HTTP URL:', url, '→', proxiedUrl);
-      return proxiedUrl;
+      // Check if this is a video stream URL (not an image)
+      const isVideoStream = (
+        url.endsWith('.mpd') || 
+        url.endsWith('.m3u8') || 
+        url.includes('/manifest.mpd') ||
+        url.includes('/playlist.m3u8') ||
+        url.includes('/live/') ||
+        url.includes('manifest') ||
+        !url.match(/\.(jpg|jpeg|png|gif|webp|svg|ico|bmp)$/i)
+      );
+      
+      if (isVideoStream) {
+        const proxy = getNextProxy();
+        const proxiedUrl = proxy + encodeURIComponent(url);
+        console.log('Proxying video stream:', url, '→', proxiedUrl);
+        return proxiedUrl;
+      } else {
+        // It's an image - keep it as HTTP (browsers usually allow image mixed content)
+        console.log('Keeping image as HTTP (mixed content allowed for images):', url);
+        return url;
+      }
     }
     return url;
   }
@@ -299,7 +317,7 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
           id:    tvgId,
           name:  tvgName || title || 'Unknown',
           title: title,
-          logo:  tvgLogo,
+          logo:  tvgLogo,  // Don't proxy images
           group: tvgGroup || 'Uncategorized',
           kodiprop: {},
           originalUrl: null,
@@ -323,6 +341,7 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
         if (pending) {
           pending.kodiprop = { ...kodiprop };
           pending.originalUrl = line;
+          // Only proxy video streams
           pending.url = fixMixedContent(line);
           pending.uid = `${pending.id || pending.name}__${result.length}`;
           
@@ -761,10 +780,12 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
     const typeMap = { 'dash': '📡', 'hls': '▶️', 'direct': '🎬' };
     const typeIcon = typeMap[ch.streamType] || '▶️';
 
-    if (ch.logo) {
+    // Logo - use original URL, don't proxy images
+    const logoUrl = ch.logo;
+    if (logoUrl) {
       const img = document.createElement('img');
       img.className = 'ch-logo';
-      img.src = ch.logo;
+      img.src = logoUrl; // Keep original URL for images
       img.alt = '';
       img.loading = 'lazy';
       const fallback = document.createElement('div');
