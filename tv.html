@@ -3,17 +3,12 @@
   K'yatsume M3U IPTV Player
   Copyright (C) 2025 K'yatsume
   Licensed under GNU General Public License v3.0
-  https://www.gnu.org/licenses/gpl-3.0.html
-
-  Privacy-focused, zero-server, browser-based M3U IPTV player.
-  All processing happens locally in your browser.
-  No data is ever transmitted to any third party.
 -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>K'yatsume M3U IPTV Player v1</title>
+<title>K'yatsume M3U IPTV Player</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.7/hls.min.js"></script>
 <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
 <style>
@@ -200,12 +195,8 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
 
 <script>
 /*
- * K'yatsume M3U IPTV Player
+ * K'yatsume M3U IPTV Player - Fixed DASH Error Handler
  * Copyright (C) 2025 K'yatsume — GPL-3.0 License
- * https://www.gnu.org/licenses/gpl-3.0.html
- *
- * Completely client-side. No data leaves the browser.
- * Supports: HLS (M3U8), DASH (MPD), MP4, and ClearKey DRM
  */
 (function() {
   'use strict';
@@ -345,7 +336,7 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
     return headers;
   }
 
-  // ── Playback ──────────────────────────────────────────────────────────────
+  // ── Playback with Fixed DASH Error Handling ──────────────────────────────
   function playChannel(ch) {
     STATE.active = ch;
 
@@ -357,12 +348,15 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
     const errBanner = $('errorBanner');
     errBanner.style.display = 'none';
 
+    // Cleanup old players
     if (STATE.hls) {
       STATE.hls.destroy();
       STATE.hls = null;
     }
     if (STATE.dash) {
-      STATE.dash.reset();
+      try {
+        STATE.dash.reset();
+      } catch(e) {}
       STATE.dash = null;
     }
     video.pause();
@@ -381,58 +375,91 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
     const headers = parseHeaders(ch.kodiprop?.headers || '');
     console.log('Stream type:', streamType, 'Headers:', headers);
 
-    // ── DASH (MPD) ──────────────────────────────────────────────────────────
+    // ── DASH (MPD) with Fixed Error Handling ──────────────────────────────
     if (streamType === 'dash' || url.includes('.mpd')) {
       if (typeof dashjs !== 'undefined') {
         try {
           const dash = dashjs.MediaPlayer().create();
           STATE.dash = dash;
           
-          dash.initialize(video, url, true);
+          // Set up error handling BEFORE initialization
+          dash.on(dashjs.MediaPlayer.events.ERROR, function(e) {
+            console.warn('DASH event error:', e);
+            // Don't show error for non-fatal events
+            if (e && e.error === 'capabilityError') {
+              // Capability errors are usually not fatal
+              return;
+            }
+            if (e && (e.error === 'manifestError' || e.error === 'downloadError')) {
+              showStreamError('DASH error: ' + (e.message || 'Manifest load failed'));
+            }
+          });
           
+          // Initialize with proper error handling
+          try {
+            dash.initialize(video, url, true);
+          } catch(initError) {
+            console.error('DASH init error:', initError);
+            // Try with CORS proxy as fallback
+            const proxyUrl = CORS_PROXY + encodeURIComponent(url);
+            toast('Retrying DASH via CORS proxy...', 'warn', 3000);
+            dash.initialize(video, proxyUrl, true);
+          }
+          
+          // Set custom headers
           if (Object.keys(headers).length > 0) {
-            dash.setXHRRequestHeaders(headers);
+            try {
+              dash.setXHRRequestHeaders(headers);
+            } catch(e) {}
           }
           
+          // Handle DRM (ClearKey)
           if (ch.kodiprop?.licenseKey) {
-            const licenseKey = ch.kodiprop.licenseKey;
-            const [keyId, key] = licenseKey.split(':');
-            
-            const clearkeyConfig = {
-              'clearkey': {
-                'keySystemId': 'org.w3.clearkey',
-                'keys': [{ 'keyId': keyId, 'key': key }]
+            try {
+              const licenseKey = ch.kodiprop.licenseKey;
+              const [keyId, key] = licenseKey.split(':');
+              
+              if (keyId && key) {
+                const clearkeyConfig = {
+                  'clearkey': {
+                    'keySystemId': 'org.w3.clearkey',
+                    'keys': [{ 'keyId': keyId, 'key': key }]
+                  }
+                };
+                dash.setProtectionData(clearkeyConfig);
+                console.log('ClearKey DRM configured');
               }
-            };
-            
-            dash.setProtectionData(clearkeyConfig);
-            console.log('ClearKey DRM configured');
-          }
-          
-          if (ch.kodiprop?.manifestHeaders) {
-            const manifestHeaders = parseHeaders(ch.kodiprop.manifestHeaders);
-            if (Object.keys(manifestHeaders).length > 0) {
-              dash.setXHRRequestHeaders({
-                ...headers,
-                ...manifestHeaders
-              });
+            } catch(e) {
+              console.warn('DRM setup failed:', e);
             }
           }
           
-          dash.on(dashjs.MediaPlayer.events.PLAYBACK_LOADED, () => {
+          // Set manifest headers if provided
+          if (ch.kodiprop?.manifestHeaders) {
+            try {
+              const manifestHeaders = parseHeaders(ch.kodiprop.manifestHeaders);
+              if (Object.keys(manifestHeaders).length > 0) {
+                dash.setXHRRequestHeaders({
+                  ...headers,
+                  ...manifestHeaders
+                });
+              }
+            } catch(e) {}
+          }
+          
+          // Playback loaded event
+          dash.on(dashjs.MediaPlayer.events.PLAYBACK_LOADED, function() {
             console.log('DASH loaded');
             video.play().catch(() => {});
           });
           
-          dash.on(dashjs.MediaPlayer.events.ERROR, (e) => {
-            console.error('DASH error:', e);
-            if (e.error === 'capability' || e.error === 'manifestError') {
-              showStreamError('DASH error: ' + (e.message || 'Unknown error'));
-            }
+          // Playback started event
+          dash.on(dashjs.MediaPlayer.events.PLAYBACK_STARTED, function() {
+            console.log('DASH playback started');
           });
           
         } catch (e) {
-          console.error('DASH init error:', e);
+          console.error('DASH initialization error:', e);
           showStreamError('DASH error: ' + e.message);
         }
       } else {
@@ -471,6 +498,8 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
       } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
         video.src = url;
         video.play().catch(() => {});
+      } else {
+        showStreamError('HLS not supported in this browser');
       }
       
     // ── Direct ──────────────────────────────────────────────────────────────
@@ -761,7 +790,10 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
   // ── Clear ──────────────────────────────────────────────────────────────────
   function clear() {
     if (STATE.hls) { STATE.hls.destroy(); STATE.hls = null; }
-    if (STATE.dash) { STATE.dash.reset(); STATE.dash = null; }
+    if (STATE.dash) { 
+      try { STATE.dash.reset(); } catch(e) {}
+      STATE.dash = null; 
+    }
     const v = $('videoEl');
     v.pause();
     v.removeAttribute('src');
@@ -816,7 +848,7 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
   $('pipBtn').addEventListener('click', togglePiP);
   $('fullscreenBtn').addEventListener('click', toggleFullscreen);
 
-  // Expose for debugging (optional)
+  // Expose for debugging
   window.Player = { load, toggleFavFilter, togglePiP, toggleFullscreen, clear };
 
 })();
