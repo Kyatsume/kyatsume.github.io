@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  K'yatsume M3U IPTV Player
+  K'yatsume M3U IPTV Player - Fixed Mixed Content & DASH Errors
   Copyright (C) 2025 K'yatsume
   Licensed under GNU General Public License v3.0
 -->
@@ -195,7 +195,7 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
 
 <script>
 /*
- * K'yatsume M3U IPTV Player - Fixed DASH Error Handler
+ * K'yatsume M3U IPTV Player - Fixed Mixed Content & DASH Errors
  * Copyright (C) 2025 K'yatsume — GPL-3.0 License
  */
 (function() {
@@ -242,6 +242,18 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
       el.classList.add('out');
       setTimeout(() => el.remove(), 240);
     }, duration);
+  }
+
+  // ── Fix Mixed Content: Convert HTTP to HTTPS ─────────────────────────────
+  function fixMixedContent(url) {
+    if (!url) return url;
+    // If page is HTTPS and URL starts with http://, try to upgrade to https://
+    if (window.location.protocol === 'https:' && url.startsWith('http://')) {
+      const httpsUrl = url.replace('http://', 'https://');
+      console.log('Upgraded HTTP to HTTPS:', url, '→', httpsUrl);
+      return httpsUrl;
+    }
+    return url;
   }
 
   // ── M3U Parser with KODIPROP Support ─────────────────────────────────────
@@ -294,7 +306,8 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
       } else if (!line.startsWith('#')) {
         if (pending) {
           pending.kodiprop = { ...kodiprop };
-          pending.url = line;
+          // Fix mixed content for the URL
+          pending.url = fixMixedContent(line);
           pending.uid = `${pending.id || pending.name}__${result.length}`;
           
           if (line.endsWith('.mpd') || line.includes('/manifest.mpd')) {
@@ -311,7 +324,7 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
           result.push({
             id: '', name: line, title: line,
             logo: '', group: 'Uncategorized',
-            url: line,
+            url: fixMixedContent(line),
             uid: `__bare_${result.length}`,
             streamType: 'direct',
             kodiprop: {},
@@ -336,21 +349,19 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
     return headers;
   }
 
-  
-// Safe DASH event registration
-function safeDashOn(player,eventName,handler){
-  try{
-    if(!window.dashjs||!dashjs.MediaPlayer||!dashjs.MediaPlayer.events)return;
-    const ev=dashjs.MediaPlayer.events[eventName];
-    if(ev) player.on(ev,handler);
-    else console.debug("Skipping unavailable DASH event:",eventName);
-  }catch(err){
-    console.debug("Failed to register DASH event:",eventName,err);
+  // ── Safe DASH event registration ──────────────────────────────────────────
+  function safeDashOn(player, eventName, handler) {
+    try {
+      if (!window.dashjs || !dashjs.MediaPlayer || !dashjs.MediaPlayer.events) return;
+      const ev = dashjs.MediaPlayer.events[eventName];
+      if (ev) player.on(ev, handler);
+      else console.debug("Skipping unavailable DASH event:", eventName);
+    } catch(err) {
+      console.debug("Failed to register DASH event:", eventName, err);
+    }
   }
-}
 
-
-// ── Playback with Fixed DASH Error Handling ──────────────────────────────
+  // ── Playback with Fixed Mixed Content & DASH Errors ──────────────────────
   function playChannel(ch) {
     STATE.active = ch;
 
@@ -384,10 +395,11 @@ function safeDashOn(player,eventName,handler){
     $('nowPlaying').textContent = ch.name || ch.title || 'Unknown';
     $('nowGroup').textContent = ch.group || '';
 
-    const url = ch.url;
+    // Fix mixed content for the stream URL
+    const url = fixMixedContent(ch.url);
     const streamType = ch.streamType || 'direct';
     const headers = parseHeaders(ch.kodiprop?.headers || '');
-    console.log('Stream type:', streamType, 'Headers:', headers);
+    console.log('Stream type:', streamType, 'URL:', url);
 
     // ── DASH (MPD) with Fixed Error Handling ──────────────────────────────
     if (streamType === 'dash' || url.includes('.mpd')) {
@@ -397,11 +409,9 @@ function safeDashOn(player,eventName,handler){
           STATE.dash = dash;
           
           // Set up error handling BEFORE initialization
-          safeDashOn(dash,'ERROR',function(e) {
+          safeDashOn(dash, 'ERROR', function(e) {
             console.warn('DASH event error:', e);
-            // Don't show error for non-fatal events
             if (e && e.error === 'capabilityError') {
-              // Capability errors are usually not fatal
               return;
             }
             if (e && (e.error === 'manifestError' || e.error === 'downloadError')) {
@@ -462,13 +472,13 @@ function safeDashOn(player,eventName,handler){
           }
           
           // Playback loaded event
-          safeDashOn(dash,'PLAYBACK_LOADED',function() {
+          safeDashOn(dash, 'PLAYBACK_LOADED', function() {
             console.log('DASH loaded');
             video.play().catch(() => {});
           });
           
           // Playback started event
-          safeDashOn(dash,'PLAYBACK_STARTED',function() {
+          safeDashOn(dash, 'PLAYBACK_STARTED', function() {
             console.log('DASH playback started');
           });
           
