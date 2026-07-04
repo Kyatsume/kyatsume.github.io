@@ -1,14 +1,9 @@
-I'll create an OTT web player specifically designed for M3U8 streams using HLS.js library. This player will handle live and VOD M3U8 playlists with adaptive bitrate support.
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>StreamVerse - M3U8 OTT Player</title>
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <title>Simple M3U8 Player</title>
     <!-- HLS.js for M3U8 streaming -->
     <script src="https://cdn.jsdelivr.net/npm/hls.js@0.14.17/dist/hls.min.js"></script>
     <style>
@@ -16,220 +11,100 @@ I'll create an OTT web player specifically designed for M3U8 streams using HLS.j
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         body {
-            background: #0b0e14;
-            color: #f0f2f5;
+            background: #0a0a0a;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         .player-container {
-            max-width: 1280px;
             width: 100%;
-            background: #141a21;
-            border-radius: 32px;
-            padding: 24px 24px 32px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-            transition: all 0.3s ease;
-        }
-
-        /* -------- NAV BAR -------- */
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 4px 20px 4px;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .brand i {
-            font-size: 28px;
-            color: #e50914;
-            background: #fff;
-            padding: 6px;
+            max-width: 900px;
+            background: #1a1a1a;
             border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
         }
 
-        .brand h1 {
-            font-size: 24px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #f5f7fa, #b0c4de);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-        }
-
-        .nav-actions i {
-            font-size: 20px;
-            color: #9aa8b9;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .nav-actions i:hover {
-            color: #ffffff;
-        }
-
-        .avatar {
-            width: 36px;
-            height: 36px;
-            background: #2a3340;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            color: #bcc9db;
-            border: 2px solid #3f4a5a;
-            cursor: pointer;
-        }
-
-        /* -------- VIDEO WRAPPER -------- */
         .video-wrapper {
-            background: #0f131a;
-            border-radius: 24px;
-            overflow: hidden;
             position: relative;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
         }
 
-        .video-wrapper video {
+        video {
             display: block;
             width: 100%;
             aspect-ratio: 16 / 9;
             background: #000;
-            outline: none;
             cursor: pointer;
         }
 
-        /* -------- STREAM STATUS BADGE -------- */
-        .stream-status {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px);
-            padding: 8px 16px;
-            border-radius: 40px;
-            font-size: 13px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        .status-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            display: inline-block;
-            animation: pulse 1.5s ease-in-out infinite;
-        }
-
-        .status-dot.live {
-            background: #e50914;
-        }
-
-        .status-dot.buffering {
-            background: #fbbf24;
-        }
-
-        .status-dot.ready {
-            background: #22c55e;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(0.8); }
-        }
-
-        /* -------- CUSTOM VIDEO CONTROLS -------- */
-        .video-controls-overlay {
+        /* Custom Controls */
+        .controls {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 40px 20px 18px;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent);
+            padding: 30px 16px 14px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
             opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
+            transition: opacity 0.3s;
         }
 
-        .video-wrapper:hover .video-controls-overlay,
-        .video-wrapper.paused .video-controls-overlay {
+        .video-wrapper:hover .controls,
+        .video-wrapper.paused .controls {
             opacity: 1;
-            pointer-events: auto;
         }
 
         .controls-row {
             display: flex;
             align-items: center;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-
-        .controls-row button {
-            background: none;
-            border: none;
-            color: #fff;
-            font-size: 22px;
-            cursor: pointer;
-            transition: 0.2s;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 40px;
-        }
-
-        .controls-row button:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .progress-bar {
-            flex: 1;
-            min-width: 120px;
-            display: flex;
-            align-items: center;
             gap: 12px;
         }
 
-        .progress-bar input[type="range"] {
+        .controls button {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: 0.2s;
+            min-width: 36px;
+        }
+
+        .controls button:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .progress-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="range"] {
             -webkit-appearance: none;
             appearance: none;
-            width: 100%;
+            flex: 1;
             height: 4px;
-            background: #4a5568;
-            border-radius: 4px;
+            background: #555;
+            border-radius: 2px;
             outline: none;
             transition: 0.2s;
         }
 
-        .progress-bar input[type="range"]::-webkit-slider-thumb {
+        input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
             width: 14px;
@@ -238,295 +113,63 @@ I'll create an OTT web player specifically designed for M3U8 streams using HLS.j
             background: #e50914;
             cursor: pointer;
             border: 2px solid #fff;
-            box-shadow: 0 0 8px rgba(229, 9, 20, 0.6);
         }
 
-        .time-display {
-            font-size: 14px;
-            font-weight: 500;
-            color: #d1dbe8;
-            min-width: 100px;
-            letter-spacing: 0.3px;
-        }
-
-        .volume-box {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .volume-box i {
-            font-size: 18px;
-            color: #d1dbe8;
-        }
-
-        .volume-box input[type="range"] {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 70px;
-            height: 4px;
-            background: #4a5568;
-            border-radius: 4px;
-            outline: none;
-        }
-
-        .volume-box input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 12px;
-            height: 12px;
+        input[type="range"]::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
             background: #e50914;
             cursor: pointer;
+            border: 2px solid #fff;
         }
 
-        .quality-selector {
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+        .time {
             color: #fff;
-            padding: 6px 12px;
-            border-radius: 20px;
             font-size: 13px;
-            cursor: pointer;
-            outline: none;
             font-weight: 500;
+            min-width: 90px;
+            letter-spacing: 0.3px;
         }
 
-        .quality-selector option {
-            background: #1a212b;
-        }
-
-        /* -------- CONTENT SECTION -------- */
-        .content-section {
-            margin-top: 28px;
-        }
-
-        .title-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .title-row h2 {
-            font-size: 22px;
-            font-weight: 600;
-            letter-spacing: -0.3px;
-        }
-
-        .badge {
-            background: #e50914;
-            padding: 4px 14px;
-            border-radius: 40px;
-            font-size: 13px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .badge.live-badge {
-            background: #dc2626;
-            animation: pulse-badge 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse-badge {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
-        }
-
-        .meta-info {
-            display: flex;
-            gap: 18px;
-            flex-wrap: wrap;
-            font-size: 15px;
-            color: #a8b9ce;
-            margin-top: 4px;
-        }
-
-        .meta-info span i {
-            margin-right: 6px;
-            color: #e50914;
-        }
-
-        .description {
-            margin-top: 14px;
-            font-size: 15px;
-            line-height: 1.6;
-            color: #cbd5e1;
-            max-width: 700px;
-        }
-
-        /* -------- M3U8 INPUT SECTION -------- */
-        .m3u8-input-section {
-            margin-top: 24px;
-            padding: 20px;
-            background: #1a212b;
-            border-radius: 20px;
-            border: 1px solid #2a3340;
-        }
-
-        .m3u8-input-section h3 {
-            font-size: 16px;
-            font-weight: 500;
-            margin-bottom: 12px;
-            color: #b0c4de;
-        }
-
-        .input-group {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .input-group input {
-            flex: 1;
-            min-width: 200px;
-            padding: 12px 18px;
-            border-radius: 40px;
-            border: 1px solid #2a3340;
-            background: #0f131a;
-            color: #fff;
-            font-size: 14px;
-            outline: none;
-            transition: 0.2s;
-        }
-
-        .input-group input:focus {
-            border-color: #e50914;
-            box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.2);
-        }
-
-        .input-group input::placeholder {
-            color: #4e5d72;
-        }
-
-        .input-group button {
-            padding: 12px 28px;
-            border-radius: 40px;
-            border: none;
-            background: #e50914;
-            color: #fff;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            transition: 0.2s;
+        .volume-control {
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
-        .input-group button:hover {
-            background: #f6121d;
-            transform: scale(1.02);
+        .volume-control input[type="range"] {
+            width: 60px;
         }
 
-        .preset-urls {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 12px;
-        }
-
-        .preset-btn {
-            padding: 6px 16px;
-            border-radius: 40px;
-            border: 1px solid #2a3340;
-            background: transparent;
-            color: #9aa8b9;
-            font-size: 13px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .preset-btn:hover {
-            background: #2a3340;
-            color: #fff;
-            border-color: #e50914;
-        }
-
-        /* -------- EPISODE / SUGGESTIONS GRID -------- */
-        .episode-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 16px;
-            margin-top: 24px;
-        }
-
-        .episode-card {
-            background: #1e2630;
-            border-radius: 18px;
-            padding: 14px 12px;
-            transition: 0.2s;
-            cursor: pointer;
-            border: 1px solid transparent;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .episode-card:hover {
-            background: #2a3442;
-            border-color: #e50914;
-            transform: translateY(-4px);
-            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
-        }
-
-        .episode-card .thumb {
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            background: #2d3748;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            color: #e50914;
-            background: #1a212b;
-        }
-
-        .episode-card h4 {
-            font-size: 15px;
-            font-weight: 600;
-            margin-top: 4px;
-        }
-
-        .episode-card p {
-            font-size: 13px;
-            color: #9aaec9;
-        }
-
-        .episode-card .play-icon {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 13px;
-            color: #e50914;
-            font-weight: 500;
-        }
-
-        /* -------- LOADING SPINNER -------- */
-        .loading-spinner {
+        /* Loading indicator */
+        .loading {
             display: none;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            z-index: 5;
+            color: #fff;
+            font-size: 14px;
+            background: rgba(0,0,0,0.7);
+            padding: 12px 24px;
+            border-radius: 8px;
         }
 
-        .loading-spinner.active {
+        .loading.active {
             display: block;
         }
 
         .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            border-top: 4px solid #e50914;
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-top: 2px solid #e50914;
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            animation: spin 0.8s linear infinite;
+            margin-right: 10px;
+            vertical-align: middle;
         }
 
         @keyframes spin {
@@ -534,43 +177,100 @@ I'll create an OTT web player specifically designed for M3U8 streams using HLS.j
             100% { transform: rotate(360deg); }
         }
 
-        .footer-note {
-            margin-top: 32px;
-            text-align: center;
-            color: #4e5d72;
-            font-size: 13px;
-            letter-spacing: 0.3px;
-            border-top: 1px solid #1f2937;
-            padding-top: 20px;
+        /* Input section */
+        .input-section {
+            margin-top: 16px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
-        /* responsive */
-        @media (max-width: 640px) {
-            .player-container {
-                padding: 16px;
-            }
+        .input-section input {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px 16px;
+            border-radius: 6px;
+            border: 1px solid #333;
+            background: #222;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .input-section input:focus {
+            border-color: #e50914;
+        }
+
+        .input-section input::placeholder {
+            color: #666;
+        }
+
+        .input-section button {
+            padding: 10px 24px;
+            border-radius: 6px;
+            border: none;
+            background: #e50914;
+            color: #fff;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+
+        .input-section button:hover {
+            background: #f6121d;
+        }
+
+        .presets {
+            margin-top: 10px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .presets button {
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid #333;
+            background: transparent;
+            color: #aaa;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .presets button:hover {
+            background: #333;
+            color: #fff;
+            border-color: #e50914;
+        }
+
+        .status {
+            margin-top: 10px;
+            color: #888;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .status span {
+            color: #e50914;
+        }
+
+        @media (max-width: 600px) {
             .controls-row {
+                flex-wrap: wrap;
                 gap: 8px;
             }
-            .time-display {
+            .volume-control input[type="range"] {
+                width: 40px;
+            }
+            .time {
                 font-size: 12px;
                 min-width: 70px;
             }
-            .volume-box input[type="range"] {
-                width: 50px;
-            }
-            .episode-grid {
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            }
-            .stream-status {
-                font-size: 11px;
-                padding: 6px 12px;
-                top: 10px;
-                right: 10px;
-            }
-            .quality-selector {
-                font-size: 11px;
-                padding: 4px 10px;
+            .input-section input {
+                min-width: 150px;
             }
         }
     </style>
@@ -578,196 +278,106 @@ I'll create an OTT web player specifically designed for M3U8 streams using HLS.j
 <body>
 
 <div class="player-container">
-
-    <!-- NAV -->
-    <nav class="navbar">
-        <div class="brand">
-            <i class="fas fa-play"></i>
-            <h1>StreamVerse</h1>
-        </div>
-        <div class="nav-actions">
-            <i class="fas fa-search"></i>
-            <i class="fas fa-bell"></i>
-            <div class="avatar">JD</div>
-        </div>
-    </nav>
-
-    <!-- VIDEO PLAYER -->
-    <div class="video-wrapper" id="videoWrapper">
-        <video id="mainVideo" poster="https://via.placeholder.com/1280x720/1a202a/ffffff?text=StreamVerse+M3U8+Player" preload="metadata">
-            Your browser does not support the video tag.
-        </video>
-
-        <!-- Loading Spinner -->
-        <div class="loading-spinner" id="loadingSpinner">
-            <div class="spinner"></div>
+    <!-- Video Player -->
+    <div class="video-wrapper" id="wrapper">
+        <video id="video" poster="https://via.placeholder.com/1280x720/1a1a1a/555555?text=M3U8+Player"></video>
+        
+        <div class="loading" id="loading">
+            <span class="spinner"></span> Loading...
         </div>
 
-        <!-- Stream Status -->
-        <div class="stream-status" id="streamStatus">
-            <span class="status-dot ready" id="statusDot"></span>
-            <span id="statusText">Ready</span>
-        </div>
-
-        <!-- custom controls -->
-        <div class="video-controls-overlay" id="controlsOverlay">
+        <div class="controls" id="controls">
             <div class="controls-row">
-                <button id="playBtn" aria-label="Play/Pause"><i class="fas fa-play"></i></button>
-
-                <div class="progress-bar">
-                    <input type="range" id="progressSlider" min="0" max="100" value="0" step="0.1" />
-                    <span class="time-display" id="timeDisplay">0:00 / 0:00</span>
+                <button id="playBtn">▶</button>
+                
+                <div class="progress-container">
+                    <input type="range" id="progress" min="0" max="100" value="0" />
+                    <span class="time" id="timeDisplay">0:00 / 0:00</span>
                 </div>
 
-                <div class="volume-box">
-                    <i class="fas fa-volume-up" id="volumeIcon"></i>
-                    <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="1" />
+                <div class="volume-control">
+                    <button id="muteBtn">🔊</button>
+                    <input type="range" id="volume" min="0" max="1" step="0.05" value="1" />
                 </div>
 
-                <select class="quality-selector" id="qualitySelector">
-                    <option value="auto">Auto</option>
-                </select>
-
-                <button id="fullscreenBtn" aria-label="Fullscreen"><i class="fas fa-expand"></i></button>
+                <button id="fullscreenBtn">⛶</button>
             </div>
         </div>
     </div>
 
-    <!-- CONTENT INFO -->
-    <div class="content-section">
-        <div class="title-row">
-            <h2 id="streamTitle">M3U8 Stream <span class="badge" id="streamTypeBadge">VOD</span></h2>
-            <div style="display: flex; gap: 12px;">
-                <i class="fas fa-heart" style="color: #e50914; font-size: 22px; cursor: pointer;"></i>
-                <i class="fas fa-plus" style="color: #9aa8b9; font-size: 22px; cursor: pointer;"></i>
-            </div>
-        </div>
-        <div class="meta-info">
-            <span><i class="fas fa-calendar-alt"></i> <span id="streamYear">2024</span></span>
-            <span><i class="fas fa-clock"></i> <span id="streamDuration">Live</span></span>
-            <span><i class="fas fa-star" style="color: #fbbf24;"></i> <span id="streamRating">4.8</span></span>
-            <span><i class="fas fa-tag"></i> <span id="streamGenre">Streaming</span></span>
-        </div>
-        <p class="description" id="streamDescription">
-            Enter a custom M3U8 URL above to start streaming. Supports HLS live and VOD streams with adaptive bitrate.
-        </p>
+    <!-- Input -->
+    <div class="input-section">
+        <input type="text" id="urlInput" placeholder="Enter M3U8 URL..." value="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" />
+        <button id="loadBtn">Load</button>
     </div>
 
-    <!-- M3U8 INPUT -->
-    <div class="m3u8-input-section">
-        <h3><i class="fas fa-link" style="margin-right: 8px;"></i> Enter M3U8 Stream URL</h3>
-        <div class="input-group">
-            <input type="text" id="m3u8Input" placeholder="https://example.com/stream.m3u8" value="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" />
-            <button id="loadStreamBtn"><i class="fas fa-play"></i> Load Stream</button>
-        </div>
-        <div class="preset-urls">
-            <button class="preset-btn" data-url="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8">Big Buck Bunny (VOD)</button>
-            <button class="preset-btn" data-url="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8">Test VOD</button>
-            <button class="preset-btn" data-url="https://test-streams.mux.dev/index.m3u8">Live Test</button>
-        </div>
+    <div class="presets">
+        <button data-url="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8">Sample VOD</button>
+        <button data-url="https://test-streams.mux.dev/index.m3u8">Live Test</button>
+        <button data-url="https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8">Sintel</button>
     </div>
 
-    <!-- EPISODE / SUGGESTIONS -->
-    <div style="margin-top: 28px;">
-        <h3 style="font-weight: 500; letter-spacing: 0.3px; margin-bottom: 12px; color: #b0c4de;">
-            <i class="fas fa-list-ul" style="margin-right: 10px;"></i> Suggested Streams
-        </h3>
-        <div class="episode-grid" id="episodeGrid">
-            <!-- cards will be injected by JS -->
-        </div>
-    </div>
-
-    <div class="footer-note">
-        <i class="fas fa-circle" style="color: #e50914; font-size: 8px; margin-right: 6px;"></i>
-        StreamVerse · M3U8/HLS Player · Powered by HLS.js
-    </div>
+    <div class="status" id="status">Ready to play <span>⏺</span></div>
 </div>
 
 <script>
     (function() {
-        // -------- DOM refs --------
-        const video = document.getElementById('mainVideo');
+        const video = document.getElementById('video');
         const playBtn = document.getElementById('playBtn');
-        const progressSlider = document.getElementById('progressSlider');
+        const progress = document.getElementById('progress');
         const timeDisplay = document.getElementById('timeDisplay');
-        const volumeSlider = document.getElementById('volumeSlider');
-        const volumeIcon = document.getElementById('volumeIcon');
+        const volume = document.getElementById('volume');
+        const muteBtn = document.getElementById('muteBtn');
         const fullscreenBtn = document.getElementById('fullscreenBtn');
-        const wrapper = document.getElementById('videoWrapper');
-        const loadingSpinner = document.getElementById('loadingSpinner');
-        const statusDot = document.getElementById('statusDot');
-        const statusText = document.getElementById('statusText');
-        const qualitySelector = document.getElementById('qualitySelector');
-        const m3u8Input = document.getElementById('m3u8Input');
-        const loadStreamBtn = document.getElementById('loadStreamBtn');
-        const presetBtns = document.querySelectorAll('.preset-btn');
-        const streamTitle = document.getElementById('streamTitle');
-        const streamTypeBadge = document.getElementById('streamTypeBadge');
-        const streamYear = document.getElementById('streamYear');
-        const streamDuration = document.getElementById('streamDuration');
-        const streamRating = document.getElementById('streamRating');
-        const streamGenre = document.getElementById('streamGenre');
-        const streamDescription = document.getElementById('streamDescription');
+        const urlInput = document.getElementById('urlInput');
+        const loadBtn = document.getElementById('loadBtn');
+        const presets = document.querySelectorAll('.presets button');
+        const loading = document.getElementById('loading');
+        const status = document.getElementById('status');
+        const wrapper = document.getElementById('wrapper');
 
-        // -------- HLS.js instance --------
         let hls = null;
         let isLive = false;
 
-        // -------- helper: format time --------
+        // Format time
         function formatTime(seconds) {
             if (isNaN(seconds) || !isFinite(seconds)) return '0:00';
-            const h = Math.floor(seconds / 3600);
-            const m = Math.floor((seconds % 3600) / 60);
+            const m = Math.floor(seconds / 60);
             const s = Math.floor(seconds % 60);
-            if (h > 0) {
-                return `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-            }
             return `${m}:${s.toString().padStart(2, '0')}`;
         }
 
-        // -------- update progress & time --------
+        // Update progress
         function updateProgress() {
             if (video.duration && !isLive) {
                 const percent = (video.currentTime / video.duration) * 100;
-                progressSlider.value = percent;
+                progress.value = percent;
                 timeDisplay.textContent = `${formatTime(video.currentTime)} / ${formatTime(video.duration)}`;
-            } else if (isLive) {
-                // For live streams, show current time only
+            } else if (isLive && video.currentTime) {
                 timeDisplay.textContent = `Live ${formatTime(video.currentTime)}`;
             }
         }
 
-        // -------- set stream status --------
-        function setStatus(type, text) {
-            statusDot.className = `status-dot ${type}`;
-            statusText.textContent = text;
+        // Set loading state
+        function setLoading(state) {
+            loading.classList.toggle('active', state);
+            status.innerHTML = state ? 'Loading stream... <span>⏳</span>' : 'Ready <span>✅</span>';
         }
 
-        // -------- set loading state --------
-        function setLoading(loading) {
-            if (loading) {
-                loadingSpinner.classList.add('active');
-                setStatus('buffering', 'Buffering...');
-            } else {
-                loadingSpinner.classList.remove('active');
-                setStatus('ready', 'Ready');
-            }
-        }
-
-        // -------- play/pause --------
+        // Toggle play/pause
         function togglePlay() {
             if (video.paused) {
                 video.play();
-                playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                playBtn.textContent = '⏸';
                 wrapper.classList.remove('paused');
             } else {
                 video.pause();
-                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                playBtn.textContent = '▶';
                 wrapper.classList.add('paused');
             }
         }
 
-        // -------- load M3U8 stream --------
+        // Load M3U8 stream
         function loadStream(url) {
             if (!url || url.trim() === '') {
                 alert('Please enter a valid M3U8 URL');
@@ -787,38 +397,24 @@ I'll create an OTT web player specifically designed for M3U8 streams using HLS.j
             video.removeAttribute('src');
             video.load();
 
-            // Clear quality options
-            qualitySelector.innerHTML = '<option value="auto">Auto</option>';
-
-            // Detect if it's a live stream (check for common patterns)
+            // Detect if live
             isLive = url.includes('live') || url.includes('index.m3u8');
 
-            // Update UI
-            if (isLive) {
-                streamTypeBadge.textContent = '🔴 LIVE';
-                streamTypeBadge.className = 'badge live-badge';
-                streamDuration.textContent = 'Live';
-                setStatus('live', 'Live');
-            } else {
-                streamTypeBadge.textContent = 'VOD';
-                streamTypeBadge.className = 'badge';
-                streamDuration.textContent = 'On Demand';
-                setStatus('ready', 'Loading...');
-            }
-
-            // Check if browser supports HLS natively
+            // Check for native HLS support (Safari)
             if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                // Native HLS support (Safari)
                 video.src = url;
                 video.addEventListener('loadedmetadata', () => {
                     setLoading(false);
                     if (!isLive) {
                         timeDisplay.textContent = `0:00 / ${formatTime(video.duration)}`;
+                    } else {
+                        timeDisplay.textContent = 'Live 0:00';
                     }
                     video.play().catch(() => {});
                 });
-            } else if (Hls.isSupported()) {
-                // Use HLS.js
+            } 
+            // Use HLS.js
+            else if (Hls.isSupported()) {
                 hls = new Hls({
                     enableWorker: true,
                     lowLatencyMode: isLive,
@@ -827,52 +423,23 @@ I'll create an OTT web player specifically designed for M3U8 streams using HLS.j
                 hls.loadSource(url);
                 hls.attachMedia(video);
 
-                hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
                     setLoading(false);
-                    
-                    // Populate quality levels
-                    const levels = hls.levels;
-                    qualitySelector.innerHTML = '<option value="auto">Auto</option>';
-                    levels.forEach((level, index) => {
-                        const option = document.createElement('option');
-                        option.value = index;
-                        const height = level.height || '?';
-                        option.textContent = `${height}p`;
-                        qualitySelector.appendChild(option);
-                    });
-
-                    // Auto-play
                     video.play().catch(() => {});
-                    
                     if (!isLive) {
                         timeDisplay.textContent = `0:00 / ${formatTime(video.duration)}`;
                     } else {
                         timeDisplay.textContent = 'Live 0:00';
-                        setStatus('live', 'Live');
+                        status.innerHTML = 'Live stream <span>🔴</span>';
                     }
                 });
 
                 hls.on(Hls.Events.ERROR, (event, data) => {
                     if (data.fatal) {
                         setLoading(false);
-                        setStatus('ready', 'Error');
+                        status.innerHTML = 'Error loading stream <span>❌</span>';
                         console.error('HLS Error:', data);
-                        alert('Failed to load stream. Please check the URL and try again.');
-                    }
-                });
-
-                hls.on(Hls.Events.LEVEL_SWITCHED, (event, data) => {
-                    const level = hls.levels[data.level];
-                    if (level) {
-                        const height = level.height || '?';
-                        qualitySelector.value = data.level;
-                    }
-                });
-
-                // For live streams, update duration display
-                hls.on(Hls.Events.FRAG_CHANGED, () => {
-                    if (isLive && video.duration) {
-                        timeDisplay.textContent = `Live ${formatTime(video.currentTime)}`;
+                        alert('Failed to load stream. Please check the URL.');
                     }
                 });
 
@@ -881,71 +448,56 @@ I'll create an OTT web player specifically designed for M3U8 streams using HLS.j
                 alert('Your browser does not support HLS streaming.');
             }
 
-            // Update stream info
-            streamTitle.textContent = url.split('/').pop() || 'M3U8 Stream';
+            // Update status
+            status.innerHTML = 'Loading... <span>⏳</span>';
         }
 
-        // -------- quality change --------
-        qualitySelector.addEventListener('change', (e) => {
-            if (hls) {
-                const level = parseInt(e.target.value);
-                if (isNaN(level)) {
-                    hls.currentLevel = -1; // Auto
-                } else {
-                    hls.currentLevel = level;
-                }
-            }
-        });
-
-        // -------- event listeners --------
+        // -------- Event Listeners --------
         video.addEventListener('timeupdate', updateProgress);
 
         video.addEventListener('play', () => {
-            playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            playBtn.textContent = '⏸';
             wrapper.classList.remove('paused');
-            if (isLive) {
-                setStatus('live', 'Live');
-            }
         });
 
         video.addEventListener('pause', () => {
-            playBtn.innerHTML = '<i class="fas fa-play"></i>';
+            playBtn.textContent = '▶';
             wrapper.classList.add('paused');
         });
 
-        video.addEventListener('waiting', () => {
-            setLoading(true);
-        });
-
-        video.addEventListener('canplay', () => {
-            setLoading(false);
-        });
+        video.addEventListener('waiting', () => setLoading(true));
+        video.addEventListener('canplay', () => setLoading(false));
 
         playBtn.addEventListener('click', togglePlay);
         video.addEventListener('click', togglePlay);
 
-        // progress slider
-        progressSlider.addEventListener('input', (e) => {
+        // Progress seek
+        progress.addEventListener('input', (e) => {
             if (video.duration && !isLive) {
                 const newTime = (e.target.value / 100) * video.duration;
                 video.currentTime = newTime;
-                updateProgress();
             }
         });
 
-        // volume
-        volumeSlider.addEventListener('input', (e) => {
+        // Volume
+        volume.addEventListener('input', (e) => {
             video.volume = parseFloat(e.target.value);
-            if (video.volume === 0) {
-                volumeIcon.className = 'fas fa-volume-mute';
-            } else if (video.volume < 0.5) {
-                volumeIcon.className = 'fas fa-volume-down';
+            muteBtn.textContent = video.volume === 0 ? '🔇' : '🔊';
+        });
+
+        muteBtn.addEventListener('click', () => {
+            if (video.volume > 0) {
+                video.volume = 0;
+                volume.value = 0;
+                muteBtn.textContent = '🔇';
             } else {
-                volumeIcon.className = 'fas fa-volume-up';
+                video.volume = 1;
+                volume.value = 1;
+                muteBtn.textContent = '🔊';
             }
         });
 
-        // fullscreen
+        // Fullscreen
         fullscreenBtn.addEventListener('click', () => {
             if (!document.fullscreenElement) {
                 document.documentElement.requestFullscreen?.() ||
@@ -955,28 +507,24 @@ I'll create an OTT web player specifically designed for M3U8 streams using HLS.j
             }
         });
 
-        // Load stream button
-        loadStreamBtn.addEventListener('click', () => {
-            loadStream(m3u8Input.value);
+        // Load button
+        loadBtn.addEventListener('click', () => loadStream(urlInput.value));
+
+        // Enter key
+        urlInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') loadStream(urlInput.value);
         });
 
-        // Enter key in input
-        m3u8Input.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                loadStream(m3u8Input.value);
-            }
-        });
-
-        // Preset buttons
-        presetBtns.forEach(btn => {
+        // Presets
+        presets.forEach(btn => {
             btn.addEventListener('click', () => {
                 const url = btn.dataset.url;
-                m3u8Input.value = url;
+                urlInput.value = url;
                 loadStream(url);
             });
         });
 
-        // -------- keyboard shortcuts --------
+        // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
             if (e.target.tagName === 'INPUT') return;
             if (e.code === 'Space') {
@@ -989,60 +537,12 @@ I'll create an OTT web player specifically designed for M3U8 streams using HLS.j
             }
         });
 
-        // -------- episode data (mock) --------
-        const episodes = [
-            { title: 'Sample VOD Stream', duration: 'VOD', year: '2024' },
-            { title: 'Live Sports Event', duration: 'Live', year: '2024' },
-            { title: 'News Channel HD', duration: 'Live', year: '2024' },
-            { title: 'Movie Night', duration: '2h 15m', year: '2023' },
-            { title: 'Documentary Series', duration: '45m', year: '2024' },
-        ];
+        // Auto-load initial stream
+        setTimeout(() => loadStream(urlInput.value), 300);
 
-        const grid = document.getElementById('episodeGrid');
-        episodes.forEach((ep, index) => {
-            const card = document.createElement('div');
-            card.className = 'episode-card';
-            const isLive = ep.duration === 'Live';
-            card.innerHTML = `
-                <div class="thumb"><i class="fas ${isLive ? 'fa-broadcast-tower' : 'fa-film'}"></i></div>
-                <h4>${ep.title}</h4>
-                <p>${ep.year} · ${ep.duration}</p>
-                <span class="play-icon"><i class="fas fa-play-circle"></i> ${isLive ? 'Watch Live' : 'Watch'}</span>
-            `;
-            card.addEventListener('click', () => {
-                // Load a sample stream
-                const sampleUrl = isLive ? 
-                    'https://test-streams.mux.dev/index.m3u8' : 
-                    'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8';
-                m3u8Input.value = sampleUrl;
-                loadStream(sampleUrl);
-                wrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            });
-            grid.appendChild(card);
-        });
-
-        // -------- auto-load initial stream --------
-        setTimeout(() => {
-            loadStream(m3u8Input.value);
-        }, 500);
-
-        console.log('🎬 StreamVerse M3U8 Player ready');
+        console.log('🎬 Simple M3U8 Player ready');
     })();
 </script>
 
 </body>
 </html>
-```
-
-M3U8 Streaming Features
-
-This player is built specifically for HLS/M3U8 streams with a clean OTT interface:
-
-· M3U8 Stream Loading: Enter any M3U8 URL in the input field or use the preset buttons to load sample streams. The player uses HLS.js for broad browser support and falls back to native HLS in Safari.
-· Adaptive Bitrate & Quality: The quality selector automatically populates with available bitrates from the HLS manifest. You can switch between quality levels or keep it on "Auto" for adaptive streaming.
-· Live & VOD Support: The interface adapts to both live and on-demand streams. Live streams show a pulsing "LIVE" badge and display "Live" in the time field, while VOD streams show full duration and seekable progress.
-· Visual Feedback: A status indicator shows the current stream state (Ready, Live, Buffering) and a loading spinner appears during buffering. The custom controls overlay appears on hover or when paused.
-
----
-
-Optimization Tip: You can replace the default M3U8 URLs in the preset buttons and input field with your own stream links. The player will work with any valid HLS stream.
