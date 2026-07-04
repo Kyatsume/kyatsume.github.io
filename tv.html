@@ -131,8 +131,8 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
     <div id="urlBar">
       <input id="urlInput" type="url" spellcheck="false" autocomplete="off"
         placeholder="Paste M3U/M3U8 URL here…"
-        value="https://kyatsume.github.io/iptv.m3u8">
-      <button class="btn btn-primary" id="loadBtn" onclick="Player.load()">▶ Load</button>
+        value="https://iptv-org.github.io/iptv/index.m3u">
+      <button class="btn btn-primary" id="loadBtn">▶ Load</button>
       <label class="btn btn-sm" title="Load from local .m3u file" style="cursor:pointer;">
         📁 File<input type="file" id="fileInput" accept=".m3u,.m3u8,.txt" style="display:none">
       </label>
@@ -140,8 +140,8 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
 
     <div class="header-actions">
       <span id="playlistBadge" style="display:none;"></span>
-      <button class="btn btn-sm btn-fav" id="favToggleBtn" onclick="Player.toggleFavFilter()" style="display:none;">☆ Favorites</button>
-      <button class="btn btn-sm btn-danger" id="clearBtn" onclick="Player.clear()" style="display:none;">✕ Clear</button>
+      <button class="btn btn-sm btn-fav" id="favToggleBtn" style="display:none;">☆ Favorites</button>
+      <button class="btn btn-sm btn-danger" id="clearBtn" style="display:none;">✕ Clear</button>
     </div>
   </header>
 
@@ -169,7 +169,7 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
         <div class="ph-hint">
           <span class="badge badge-green">🔒 Privacy-First</span>
           <span class="badge badge-blue">⚡ Zero Server</span>
-          <span class="badge badge-blue">🌐 HLS / MP4</span>
+          <span class="badge badge-blue">🌐 HLS / MP4 / DASH</span>
         </div>
         <p style="margin-top:8px;font-size:12px;">
           Keyboard: <span class="kbd">Space</span> Play/Pause &nbsp;
@@ -186,8 +186,8 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
           <div id="nowGroup"></div>
         </div>
         <div id="playerControls">
-          <button class="pctrl" onclick="Player.togglePiP()" title="Picture-in-Picture">⧉ PiP</button>
-          <button class="pctrl" onclick="Player.toggleFullscreen()" title="Fullscreen">⛶ Full</button>
+          <button class="pctrl" id="pipBtn" title="Picture-in-Picture">⧉ PiP</button>
+          <button class="pctrl" id="fullscreenBtn" title="Fullscreen">⛶ Full</button>
         </div>
       </div>
       <div class="error-banner" id="errorBanner"></div>
@@ -205,17 +205,19 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
  * https://www.gnu.org/licenses/gpl-3.0.html
  *
  * Completely client-side. No data leaves the browser.
+ * Supports: HLS (M3U8), DASH (MPD), MP4, and ClearKey DRM
  */
-
+(function() {
   'use strict';
 
+  // ── State ──────────────────────────────────────────────────────────────────
   const STATE = {
     all: [],
     filtered: [],
     shown: 0,
     active: null,
     hls: null,
-    dash: null,        // DASH.js instance
+    dash: null,
     favIds: new Set(tryParseJSON(localStorage.getItem('xiptv_favs'), [])),
     groupFilter: '',
     searchQuery: '',
@@ -251,7 +253,7 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
     }, duration);
   }
 
-  // ── Enhanced M3U Parser (supports KODIPROP) ─────────────────────────────
+  // ── M3U Parser with KODIPROP Support ─────────────────────────────────────
   function parseM3U(text) {
     const lines = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
     if (!lines[0] || !lines[0].trim().startsWith('#EXTM3U')) {
@@ -268,9 +270,7 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
       if (!line) continue;
 
       if (line.startsWith('#EXTINF:')) {
-        // Reset KODIPROP for new entry
         kodiprop = {};
-        
         const tvgId    = line.match(/tvg-id="([^"]*)"/)?.[1]      ?? '';
         const tvgName  = line.match(/tvg-name="([^"]*)"/)?.[1]    ?? '';
         const tvgLogo  = line.match(/tvg-logo="([^"]*)"/)?.[1]    ?? '';
@@ -286,7 +286,6 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
           kodiprop: {},
         };
       } else if (line.startsWith('#KODIPROP:')) {
-        // Parse KODIPROP tags
         const propLine = line.replace('#KODIPROP:', '').trim();
         if (propLine.includes('=')) {
           const [key, ...valParts] = propLine.split('=');
@@ -307,7 +306,6 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
           pending.url = line;
           pending.uid = `${pending.id || pending.name}__${result.length}`;
           
-          // Detect stream type
           if (line.endsWith('.mpd') || line.includes('/manifest.mpd')) {
             pending.streamType = 'dash';
           } else if (line.endsWith('.m3u8') || line.includes('/playlist.m3u8')) {
@@ -333,7 +331,7 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
     return result;
   }
 
-  // ── Parse custom headers from KODIPROP ──────────────────────────────────
+  // ── Parse Headers ──────────────────────────────────────────────────────────
   function parseHeaders(headerString) {
     const headers = {};
     if (!headerString) return headers;
@@ -347,11 +345,10 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
     return headers;
   }
 
-  // ── Playback with DASH/DRM Support ──────────────────────────────────────
+  // ── Playback ──────────────────────────────────────────────────────────────
   function playChannel(ch) {
     STATE.active = ch;
 
-    // Update active class
     document.querySelectorAll('.ch-item').forEach(el => {
       el.classList.toggle('active', el.dataset.uid === ch.uid);
     });
@@ -360,7 +357,6 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
     const errBanner = $('errorBanner');
     errBanner.style.display = 'none';
 
-    // Cleanup old players
     if (STATE.hls) {
       STATE.hls.destroy();
       STATE.hls = null;
@@ -382,49 +378,37 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
 
     const url = ch.url;
     const streamType = ch.streamType || 'direct';
-    
-    // Parse headers from KODIPROP
     const headers = parseHeaders(ch.kodiprop?.headers || '');
     console.log('Stream type:', streamType, 'Headers:', headers);
 
-    // ── DASH (MPD) with DRM ──────────────────────────────────────────────
+    // ── DASH (MPD) ──────────────────────────────────────────────────────────
     if (streamType === 'dash' || url.includes('.mpd')) {
       if (typeof dashjs !== 'undefined') {
         try {
           const dash = dashjs.MediaPlayer().create();
           STATE.dash = dash;
           
-          // Configure DASH
           dash.initialize(video, url, true);
           
-          // Set custom headers if provided
           if (Object.keys(headers).length > 0) {
             dash.setXHRRequestHeaders(headers);
           }
           
-          // Handle DRM (ClearKey)
           if (ch.kodiprop?.licenseKey) {
             const licenseKey = ch.kodiprop.licenseKey;
             const [keyId, key] = licenseKey.split(':');
             
-            // ClearKey license server setup
             const clearkeyConfig = {
               'clearkey': {
                 'keySystemId': 'org.w3.clearkey',
-                'keys': [
-                  {
-                    'keyId': keyId,
-                    'key': key
-                  }
-                ]
+                'keys': [{ 'keyId': keyId, 'key': key }]
               }
             };
             
             dash.setProtectionData(clearkeyConfig);
-            console.log('ClearKey DRM configured:', keyId, key);
+            console.log('ClearKey DRM configured');
           }
           
-          // Set additional manifest headers if needed
           if (ch.kodiprop?.manifestHeaders) {
             const manifestHeaders = parseHeaders(ch.kodiprop.manifestHeaders);
             if (Object.keys(manifestHeaders).length > 0) {
@@ -435,10 +419,9 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
             }
           }
           
-          // Handle playback events
           dash.on(dashjs.MediaPlayer.events.PLAYBACK_LOADED, () => {
-            console.log('DASH loaded successfully');
-            video.play().catch(e => console.log('Autoplay prevented:', e));
+            console.log('DASH loaded');
+            video.play().catch(() => {});
           });
           
           dash.on(dashjs.MediaPlayer.events.ERROR, (e) => {
@@ -449,14 +432,14 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
           });
           
         } catch (e) {
-          console.error('DASH initialization error:', e);
+          console.error('DASH init error:', e);
           showStreamError('DASH error: ' + e.message);
         }
       } else {
         showStreamError('DASH.js library not loaded');
       }
       
-    // ── HLS (M3U8) ────────────────────────────────────────────────────────
+    // ── HLS (M3U8) ──────────────────────────────────────────────────────────
     } else if (streamType === 'hls' || /\.m3u8(\?|$)/i.test(url)) {
       if (Hls.isSupported()) {
         const hls = new Hls({
@@ -467,7 +450,6 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
           fragLoadingTimeOut: 20000,
           manifestLoadingTimeOut: 15000,
           xhrSetup: (xhr, url) => {
-            // Apply custom headers
             Object.keys(headers).forEach(key => {
               xhr.setRequestHeader(key, headers[key]);
             });
@@ -491,7 +473,7 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
         video.play().catch(() => {});
       }
       
-    // ── Direct (MP4, etc.) ──────────────────────────────────────────────
+    // ── Direct ──────────────────────────────────────────────────────────────
     } else {
       video.src = url;
       video.play().catch(() => {});
@@ -510,7 +492,7 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
     toast('Stream error: ' + msg, 'error', 5000);
   }
 
-  // ── Load and Ingest Functions ────────────────────────────────────────────
+  // ── Load ──────────────────────────────────────────────────────────────────
   async function load() {
     const url = $('urlInput').value.trim();
     if (!url) { toast('Enter a playlist URL first', 'warn'); return; }
@@ -583,7 +565,6 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
     badge.className = 'badge badge-green';
     badge.style.display = '';
 
-    // Count stream types
     const dashCount = channels.filter(c => c.streamType === 'dash').length;
     const hlsCount = channels.filter(c => c.streamType === 'hls').length;
     toast(`✅ Loaded ${channels.length.toLocaleString()} channels (${dashCount} DASH, ${hlsCount} HLS)`, 'success');
@@ -597,7 +578,7 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
       : '▶ Load';
   }
 
-  // ── Filter & Render (same as original) ──────────────────────────────────
+  // ── Filter ─────────────────────────────────────────────────────────────────
   function buildGroupDropdown() {
     const groups = [...new Set(STATE.all.map(c => c.group))].sort((a, b) =>
       a.localeCompare(b, undefined, { sensitivity: 'base' })
@@ -653,6 +634,7 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
     }
   }
 
+  // ── Render ─────────────────────────────────────────────────────────────────
   function renderList(reset) {
     const box = $('channelList');
     if (reset) { box.innerHTML = ''; }
@@ -689,12 +671,7 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
     div.className = 'ch-item' + (isActive ? ' active' : '');
     div.dataset.uid = ch.uid;
 
-    // Stream type indicator
-    const typeMap = {
-      'dash': '📡',
-      'hls': '▶️',
-      'direct': '🎬'
-    };
+    const typeMap = { 'dash': '📡', 'hls': '▶️', 'direct': '🎬' };
     const typeIcon = typeMap[ch.streamType] || '▶️';
 
     if (ch.logo) {
@@ -762,7 +739,7 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
     if (STATE.favOnly) applyFilter();
   }
 
-  // ── Player Controls ────────────────────────────────────────────────────────
+  // ── Controls ──────────────────────────────────────────────────────────────
   function toggleFullscreen() {
     const area = $('player-area');
     if (document.fullscreenElement) {
@@ -807,12 +784,12 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
     $('playlistBadge').style.display = 'none';
     $('clearBtn').style.display = 'none';
     $('favToggleBtn').style.display = 'none';
-    $('urlInput').value = 'https://kyatsume.github.io/iptv.m3u8';
+    $('urlInput').value = 'https://iptv-org.github.io/iptv/index.m3u';
 
     toast('Playlist cleared', 'info', 2000);
   }
 
-  // ── Keyboard Shortcuts ─────────────────────────────────────────────────────
+  // ── Keyboard Shortcuts ────────────────────────────────────────────────────
   document.addEventListener('keydown', e => {
     const tag = document.activeElement?.tagName;
     if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
@@ -828,14 +805,20 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
     }
   });
 
-  // ── Wire up events ────────────────────────────────────────────────────────
+  // ── Wire Up Events ────────────────────────────────────────────────────────
+  $('loadBtn').addEventListener('click', load);
   $('urlInput').addEventListener('keydown', e => { if (e.key === 'Enter') load(); });
   $('fileInput').addEventListener('change', function() { loadFile(this); });
   $('searchInput').addEventListener('input', function() { search(this.value); });
   $('categorySelect').addEventListener('change', function() { filterGroup(this.value); });
+  $('favToggleBtn').addEventListener('click', toggleFavFilter);
+  $('clearBtn').addEventListener('click', clear);
+  $('pipBtn').addEventListener('click', togglePiP);
+  $('fullscreenBtn').addEventListener('click', toggleFullscreen);
 
-  // Expose public API
-  return { load, toggleFavFilter, togglePiP, toggleFullscreen, clear };
+  // Expose for debugging (optional)
+  window.Player = { load, toggleFavFilter, togglePiP, toggleFullscreen, clear };
+
 })();
 </script>
 </body>
