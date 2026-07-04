@@ -336,7 +336,21 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
     return headers;
   }
 
-  // ── Playback with Fixed DASH Error Handling ──────────────────────────────
+  
+// Safe DASH event registration
+function safeDashOn(player,eventName,handler){
+  try{
+    if(!window.dashjs||!dashjs.MediaPlayer||!dashjs.MediaPlayer.events)return;
+    const ev=dashjs.MediaPlayer.events[eventName];
+    if(ev) player.on(ev,handler);
+    else console.debug("Skipping unavailable DASH event:",eventName);
+  }catch(err){
+    console.debug("Failed to register DASH event:",eventName,err);
+  }
+}
+
+
+// ── Playback with Fixed DASH Error Handling ──────────────────────────────
   function playChannel(ch) {
     STATE.active = ch;
 
@@ -383,7 +397,7 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
           STATE.dash = dash;
           
           // Set up error handling BEFORE initialization
-          dash.on(dashjs.MediaPlayer.events.ERROR, function(e) {
+          safeDashOn(dash,'ERROR',function(e) {
             console.warn('DASH event error:', e);
             // Don't show error for non-fatal events
             if (e && e.error === 'capabilityError') {
@@ -448,13 +462,13 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
           }
           
           // Playback loaded event
-          dash.on(dashjs.MediaPlayer.events.PLAYBACK_LOADED, function() {
+          safeDashOn(dash,'PLAYBACK_LOADED',function() {
             console.log('DASH loaded');
             video.play().catch(() => {});
           });
           
           // Playback started event
-          dash.on(dashjs.MediaPlayer.events.PLAYBACK_STARTED, function() {
+          safeDashOn(dash,'PLAYBACK_STARTED',function() {
             console.log('DASH playback started');
           });
           
