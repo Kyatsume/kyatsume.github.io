@@ -194,209 +194,6 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
 <div id="toasts"></div>
 
 <script>
-/*
- * K'yatsume M3U IPTV Player - Fixed: Only proxy video streams, not images
- * Copyright (C) 2025 K'yatsume — GPL-3.0 License
- */
-(function() {
-  'use strict';
-
-  // ── State ──────────────────────────────────────────────────────────────────
-  const STATE = {
-    all: [],
-    filtered: [],
-    shown: 0,
-    active: null,
-    hls: null,
-    dash: null,
-    favIds: new Set(tryParseJSON(localStorage.getItem('xiptv_favs'), [])),
-    groupFilter: '',
-    searchQuery: '',
-    favOnly: false,
-  };
-  const PAGE_SIZE = 60;
-  
-  // Only use reliable CORS proxies
-  const PROXIES = [
-    'https://corsproxy.io/?',
-    'https://api.allorigins.win/raw?url=',
-  ];
-  let currentProxyIndex = 0;
-
-  function getNextProxy() {
-    const proxy = PROXIES[currentProxyIndex % PROXIES.length];
-    currentProxyIndex++;
-    return proxy;
-  }
-
-  // ── Helpers ────────────────────────────────────────────────────────────────
-  function tryParseJSON(str, fallback) {
-    try { return JSON.parse(str); } catch { return fallback; }
-  }
-
-  function esc(str) {
-    if (str == null) return '';
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
-
-  function $(id) { return document.getElementById(id); }
-
-  function toast(msg, type = 'info', duration = 3000) {
-    const el = document.createElement('div');
-    el.className = `toast ${type}`;
-    el.textContent = msg;
-    $('toasts').appendChild(el);
-    setTimeout(() => {
-      el.classList.add('out');
-      setTimeout(() => el.remove(), 240);
-    }, duration);
-  }
-
-  // ── Fix Mixed Content: Only proxy video streams, NOT images ──────────────
-  function fixMixedContent(url) {
-    if (!url) return url;
-    // Only proxy if:
-    // 1. Page is HTTPS
-    // 2. URL starts with http://
-    // 3. URL looks like a video stream (contains .mpd, .m3u8, or manifest)
-    if (window.location.protocol === 'https:' && url.startsWith('http://')) {
-      // Check if this is a video stream URL (not an image)
-      const isVideoStream = (
-        url.endsWith('.mpd') || 
-        url.endsWith('.m3u8') || 
-        url.includes('/manifest.mpd') ||
-        url.includes('/playlist.m3u8') ||
-        url.includes('/live/') ||
-        url.includes('manifest') ||
-        !url.match(/\.(jpg|jpeg|png|gif|webp|svg|ico|bmp)$/i)
-      );
-      
-      if (isVideoStream) {
-        const proxy = getNextProxy();
-        const proxiedUrl = proxy + encodeURIComponent(url);
-        console.log('Proxying video stream:', url, '→', proxiedUrl);
-        return proxiedUrl;
-      } else {
-        // It's an image - keep it as HTTP (browsers usually allow image mixed content)
-        console.log('Keeping image as HTTP (mixed content allowed for images):', url);
-        return url;
-      }
-    }
-    return url;
-  }
-
-  // ── M3U Parser with KODIPROP Support ─────────────────────────────────────
-  function parseM3U(text) {
-    const lines = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
-    if (!lines[0] || !lines[0].trim().startsWith('#EXTM3U')) {
-      toast('Not a valid M3U playlist — missing #EXTM3U header', 'error', 5000);
-      return [];
-    }
-
-    const result = [];
-    let pending = null;
-    let kodiprop = {};
-
-    for (let i = 1; i < lines.length; i++) {
-      const line = lines[i].trim();
-      if (!line) continue;
-
-      if (line.startsWith('#EXTINF:')) {
-        kodiprop = {};
-        const tvgId    = line.match(/tvg-id="([^"]*)"/)?.[1]      ?? '';
-        const tvgName  = line.match(/tvg-name="([^"]*)"/)?.[1]    ?? '';
-        const tvgLogo  = line.match(/tvg-logo="([^"]*)"/)?.[1]    ?? '';
-        const tvgGroup = line.match(/group-title="([^"]*)"/)?.[1] ?? 'Uncategorized';
-        const commaIdx = line.lastIndexOf(',');
-        const title = commaIdx !== -1 ? line.slice(commaIdx + 1).trim() : '';
-        pending = {
-          id:    tvgId,
-          name:  tvgName || title || 'Unknown',
-          title: title,
-          logo:  tvgLogo,  // Don't proxy images
-          group: tvgGroup || 'Uncategorized',
-          kodiprop: {},
-          originalUrl: null,
-        };
-      } else if (line.startsWith('#KODIPROP:')) {
-        const propLine = line.replace('#KODIPROP:', '').trim();
-        if (propLine.includes('=')) {
-          const [key, ...valParts] = propLine.split('=');
-          const val = valParts.join('=');
-          if (key === 'inputstream.adaptive.license_key') {
-            kodiprop.licenseKey = val;
-          } else if (key === 'inputstream.adaptive.license_type') {
-            kodiprop.licenseType = val;
-          } else if (key === 'inputstream.adaptive.common_headers') {
-            kodiprop.headers = val;
-          } else if (key === 'inputstream.adaptive.manifest_headers') {
-            kodiprop.manifestHeaders = val;
-          }
-        }
-      } else if (!line.startsWith('#')) {
-        if (pending) {
-          pending.kodiprop = { ...kodiprop };
-          pending.originalUrl = line;
-          // Only proxy video streams
-          pending.url = fixMixedContent(line);
-          pending.uid = `${pending.id || pending.name}__${result.length}`;
-          
-          if (line.endsWith('.mpd') || line.includes('/manifest.mpd')) {
-            pending.streamType = 'dash';
-          } else if (line.endsWith('.m3u8') || line.includes('/playlist.m3u8')) {
-            pending.streamType = 'hls';
-          } else {
-            pending.streamType = 'direct';
-          }
-          
-          result.push(pending);
-          pending = null;
-        } else if (line.startsWith('http') || line.startsWith('//')) {
-          result.push({
-            id: '', name: line, title: line,
-            logo: '', group: 'Uncategorized',
-            originalUrl: line,
-            url: fixMixedContent(line),
-            uid: `__bare_${result.length}`,
-            streamType: 'direct',
-            kodiprop: {},
-          });
-        }
-      }
-    }
-    return result;
-  }
-
-  // ── Parse Headers ──────────────────────────────────────────────────────────
-  function parseHeaders(headerString) {
-    const headers = {};
-    if (!headerString) return headers;
-    const pairs = headerString.split('&');
-    pairs.forEach(pair => {
-      const [key, ...valParts] = pair.split('=');
-      if (key && valParts.length) {
-        headers[decodeURIComponent(key)] = decodeURIComponent(valParts.join('='));
-      }
-    });
-    return headers;
-  }
-
-  // ── Safe DASH event registration ──────────────────────────────────────────
-  function safeDashOn(player, eventName, handler) {
-    try {
-      if (!window.dashjs || !dashjs.MediaPlayer || !dashjs.MediaPlayer.events) return;
-      const ev = dashjs.MediaPlayer.events[eventName];
-      if (ev) player.on(ev, handler);
-      else console.debug("Skipping unavailable DASH event:", eventName);
-    } catch(err) {
-      console.debug("Failed to register DASH event:", eventName, err);
-    }
-  }
-
   // ── Playback with Proxy Support ──────────────────────────────────────────
   function playChannel(ch) {
     STATE.active = ch;
@@ -431,13 +228,12 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
     $('nowPlaying').textContent = ch.name || ch.title || 'Unknown';
     $('nowGroup').textContent = ch.group || '';
 
-    // Use the already-proxied URL
     const url = ch.url;
     const streamType = ch.streamType || 'direct';
     const headers = parseHeaders(ch.kodiprop?.headers || '');
     console.log('Stream type:', streamType, 'URL:', url);
 
-    // ── DASH (MPD) with Proxy Support ──────────────────────────────────────
+    // ── DASH (MPD) with Widevine/ClearKey Support ─────────────────────────
     if (streamType === 'dash' || url.includes('.mpd')) {
       if (typeof dashjs !== 'undefined') {
         try {
@@ -460,7 +256,6 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
             dash.initialize(video, url, true);
           } catch(initError) {
             console.error('DASH init error:', initError);
-            // Try original URL without proxy as fallback
             if (ch.originalUrl) {
               toast('Retrying with direct URL...', 'warn', 3000);
               dash.initialize(video, ch.originalUrl, true);
@@ -474,21 +269,37 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
             } catch(e) {}
           }
           
-          // Handle DRM (ClearKey)
+          // ── FIXED: DRM Support (Widevine + ClearKey) ──────────────────
           if (ch.kodiprop?.licenseKey) {
             try {
               const licenseKey = ch.kodiprop.licenseKey;
-              const [keyId, key] = licenseKey.split(':');
+              const licenseType = ch.kodiprop.licenseType || 'org.w3.clearkey';
               
-              if (keyId && key) {
-                const clearkeyConfig = {
-                  'clearkey': {
-                    'keySystemId': 'org.w3.clearkey',
-                    'keys': [{ 'keyId': keyId, 'key': key }]
+              // Widevine (com.widevine.alpha) - licenseKey is a URL
+              if (licenseType === 'com.widevine.alpha' || licenseKey.startsWith('http')) {
+                const drmConfig = {
+                  'com.widevine.alpha': {
+                    'serverURL': licenseKey,
+                    'licenseRequestHeaders': {
+                      'Content-Type': 'application/octet-stream'
+                    }
                   }
                 };
-                dash.setProtectionData(clearkeyConfig);
-                console.log('ClearKey DRM configured');
+                dash.setProtectionData(drmConfig);
+                console.log('✅ Widevine DRM configured with license URL');
+              } 
+              // ClearKey (org.w3.clearkey) - licenseKey is KID:KEY
+              else if (licenseType === 'org.w3.clearkey') {
+                const [keyId, key] = licenseKey.split(':');
+                if (keyId && key) {
+                  const clearkeyConfig = {
+                    'org.w3.clearkey': {
+                      'keys': [{ 'keyId': keyId, 'key': key }]
+                    }
+                  };
+                  dash.setProtectionData(clearkeyConfig);
+                  console.log('✅ ClearKey DRM configured');
+                }
               }
             } catch(e) {
               console.warn('DRM setup failed:', e);
@@ -572,365 +383,6 @@ header{background:#fff;border-bottom:1px solid #d0d7de;padding:10px 20px;display
       if (video.error) showStreamError('Video error: ' + video.error.message);
     };
   }
-
-  function showStreamError(msg) {
-    const b = $('errorBanner');
-    b.textContent = '⚠ ' + msg;
-    b.style.display = 'block';
-    setTimeout(() => { b.style.display = 'none'; }, 7000);
-    toast('Stream error: ' + msg, 'error', 5000);
-  }
-
-  // ── Load ──────────────────────────────────────────────────────────────────
-  async function load() {
-    const url = $('urlInput').value.trim();
-    if (!url) { toast('Enter a playlist URL first', 'warn'); return; }
-    if (!url.startsWith('http://') && !url.startsWith('https://')) {
-      toast('URL must start with http:// or https://', 'warn'); return;
-    }
-
-    setLoadingUI(true);
-    toast('Fetching playlist…', 'info', 2000);
-
-    let text = null;
-    // Reset proxy index for fresh attempt
-    currentProxyIndex = 0;
-    
-    try {
-      // Try direct fetch first
-      const r = await fetch(url, { cache: 'no-cache' });
-      if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      text = await r.text();
-    } catch (err) {
-      console.log('Direct fetch failed:', err);
-      // Try proxies
-      let success = false;
-      for (let i = 0; i < PROXIES.length; i++) {
-        try {
-          const proxy = PROXIES[i];
-          toast(`Trying proxy ${i+1}/${PROXIES.length}...`, 'warn', 2000);
-          const r2 = await fetch(proxy + encodeURIComponent(url), { cache: 'no-cache' });
-          if (r2.ok) {
-            text = await r2.text();
-            success = true;
-            break;
-          }
-        } catch(e) {
-          console.log(`Proxy ${i+1} failed:`, e);
-        }
-      }
-      
-      if (!success) {
-        toast('Failed to fetch playlist with all methods', 'error', 6000);
-        setLoadingUI(false);
-        return;
-      }
-    }
-
-    setLoadingUI(false);
-    ingest(text);
-  }
-
-  function loadFile(input) {
-    const file = input.files && input.files[0];
-    if (!file) return;
-    toast(`Reading ${file.name}…`, 'info');
-    const reader = new FileReader();
-    reader.onload = e => ingest(e.target.result);
-    reader.onerror = () => toast('Could not read file', 'error');
-    reader.readAsText(file, 'UTF-8');
-    input.value = '';
-  }
-
-  function ingest(text) {
-    const channels = parseM3U(text);
-    if (!channels.length) {
-      toast('No channels found in playlist', 'warn', 4000);
-      return;
-    }
-
-    STATE.all = channels;
-    STATE.groupFilter = '';
-    STATE.searchQuery = '';
-    STATE.favOnly = false;
-
-    $('favToggleBtn').textContent = '☆ Favorites';
-    $('favToggleBtn').classList.remove('active-fav');
-    $('searchInput').value = '';
-    $('categorySelect').value = '';
-
-    buildGroupDropdown();
-    applyFilter();
-
-    $('sidebar').style.display = 'flex';
-    $('clearBtn').style.display = '';
-    $('favToggleBtn').style.display = '';
-
-    const badge = $('playlistBadge');
-    badge.textContent = `${channels.length.toLocaleString()} channels`;
-    badge.className = 'badge badge-green';
-    badge.style.display = '';
-
-    const dashCount = channels.filter(c => c.streamType === 'dash').length;
-    const hlsCount = channels.filter(c => c.streamType === 'hls').length;
-    toast(`✅ Loaded ${channels.length.toLocaleString()} channels (${dashCount} DASH, ${hlsCount} HLS)`, 'success');
-  }
-
-  function setLoadingUI(loading) {
-    const btn = $('loadBtn');
-    btn.disabled = loading;
-    btn.innerHTML = loading
-      ? '<span class="spinner"></span> Loading…'
-      : '▶ Load';
-  }
-
-  // ── Filter ─────────────────────────────────────────────────────────────────
-  function buildGroupDropdown() {
-    const groups = [...new Set(STATE.all.map(c => c.group))].sort((a, b) =>
-      a.localeCompare(b, undefined, { sensitivity: 'base' })
-    );
-    const sel = $('categorySelect');
-    sel.innerHTML = `<option value="">All Groups (${groups.length})</option>` +
-      groups.map((g, i) => `<option value="${i}">${esc(g)}</option>`).join('');
-    sel._groups = groups;
-  }
-
-  function applyFilter() {
-    const q = STATE.searchQuery.toLowerCase();
-    STATE.filtered = STATE.all.filter(c => {
-      if (STATE.favOnly && !STATE.favIds.has(c.uid)) return false;
-      if (STATE.groupFilter !== '' && c.group !== STATE.groupFilter) return false;
-      if (q && !c.name.toLowerCase().includes(q) && !c.title.toLowerCase().includes(q)) return false;
-      return true;
-    });
-    STATE.shown = 0;
-    renderList(true);
-    updateMeta();
-  }
-
-  function search(val) {
-    STATE.searchQuery = val.trim();
-    applyFilter();
-  }
-
-  function filterGroup(idx) {
-    const sel = $('categorySelect');
-    STATE.groupFilter = idx === '' ? '' : (sel._groups || [])[parseInt(idx, 10)] ?? '';
-    applyFilter();
-  }
-
-  function toggleFavFilter() {
-    STATE.favOnly = !STATE.favOnly;
-    const btn = $('favToggleBtn');
-    btn.textContent = STATE.favOnly ? '★ Favorites ON' : '☆ Favorites';
-    btn.classList.toggle('active-fav', STATE.favOnly);
-    applyFilter();
-  }
-
-  function updateMeta() {
-    const favCount = STATE.favIds.size;
-    $('metaText').textContent =
-      `${STATE.filtered.length.toLocaleString()} of ${STATE.all.length.toLocaleString()} channels`;
-    const favBadge = $('metaFavs');
-    if (favCount > 0) {
-      favBadge.textContent = `${favCount} ★`;
-      favBadge.style.display = '';
-    } else {
-      favBadge.style.display = 'none';
-    }
-  }
-
-  // ── Render ─────────────────────────────────────────────────────────────────
-  function renderList(reset) {
-    const box = $('channelList');
-    if (reset) { box.innerHTML = ''; }
-
-    const slice = STATE.filtered.slice(STATE.shown, STATE.shown + PAGE_SIZE);
-    STATE.shown += slice.length;
-
-    if (STATE.shown === 0 && slice.length === 0) {
-      box.innerHTML = '<div class="empty-msg">No channels match your filter.</div>';
-      return;
-    }
-
-    const oldMore = box.querySelector('.load-more-btn');
-    if (oldMore) oldMore.remove();
-
-    const frag = document.createDocumentFragment();
-    slice.forEach(ch => frag.appendChild(buildChannelItem(ch)));
-    box.appendChild(frag);
-
-    if (STATE.shown < STATE.filtered.length) {
-      const more = document.createElement('button');
-      more.className = 'load-more-btn';
-      const rem = STATE.filtered.length - STATE.shown;
-      more.textContent = `▾ Show more (${rem.toLocaleString()} remaining)`;
-      more.addEventListener('click', () => renderList(false));
-      box.appendChild(more);
-    }
-  }
-
-  function buildChannelItem(ch) {
-    const isFav = STATE.favIds.has(ch.uid);
-    const isActive = STATE.active?.uid === ch.uid;
-    const div = document.createElement('div');
-    div.className = 'ch-item' + (isActive ? ' active' : '');
-    div.dataset.uid = ch.uid;
-
-    const typeMap = { 'dash': '📡', 'hls': '▶️', 'direct': '🎬' };
-    const typeIcon = typeMap[ch.streamType] || '▶️';
-
-    // Logo - use original URL, don't proxy images
-    const logoUrl = ch.logo;
-    if (logoUrl) {
-      const img = document.createElement('img');
-      img.className = 'ch-logo';
-      img.src = logoUrl; // Keep original URL for images
-      img.alt = '';
-      img.loading = 'lazy';
-      const fallback = document.createElement('div');
-      fallback.className = 'ch-logo-placeholder';
-      fallback.style.display = 'none';
-      fallback.textContent = typeIcon;
-      img.addEventListener('error', () => {
-        img.style.display = 'none';
-        fallback.style.display = 'flex';
-      });
-      div.appendChild(img);
-      div.appendChild(fallback);
-    } else {
-      const ph = document.createElement('div');
-      ph.className = 'ch-logo-placeholder';
-      ph.textContent = typeIcon;
-      div.appendChild(ph);
-    }
-
-    const info = document.createElement('div');
-    info.className = 'ch-info';
-    const nameEl = document.createElement('div');
-    nameEl.className = 'ch-name';
-    nameEl.textContent = ch.name || ch.title || 'Unknown';
-    const groupEl = document.createElement('div');
-    groupEl.className = 'ch-group';
-    groupEl.textContent = ch.group + (ch.streamType === 'dash' ? ' 📡' : '');
-    info.appendChild(nameEl);
-    info.appendChild(groupEl);
-    div.appendChild(info);
-
-    const favBtn = document.createElement('button');
-    favBtn.className = 'fav-btn' + (isFav ? ' on' : '');
-    favBtn.title = isFav ? 'Remove from favorites' : 'Add to favorites';
-    favBtn.textContent = isFav ? '★' : '☆';
-    favBtn.addEventListener('click', e => {
-      e.stopPropagation();
-      toggleFav(ch.uid, favBtn);
-    });
-    div.appendChild(favBtn);
-
-    div.addEventListener('click', () => playChannel(ch));
-    return div;
-  }
-
-  // ── Favorites ──────────────────────────────────────────────────────────────
-  function toggleFav(uid, btn) {
-    if (STATE.favIds.has(uid)) {
-      STATE.favIds.delete(uid);
-      if (btn) { btn.textContent = '☆'; btn.classList.remove('on'); btn.title = 'Add to favorites'; }
-      toast('Removed from favorites', 'info', 2000);
-    } else {
-      STATE.favIds.add(uid);
-      if (btn) { btn.textContent = '★'; btn.classList.add('on'); btn.title = 'Remove from favorites'; }
-      toast('Added to favorites ★', 'success', 2000);
-    }
-    localStorage.setItem('xiptv_favs', JSON.stringify([...STATE.favIds]));
-    updateMeta();
-    if (STATE.favOnly) applyFilter();
-  }
-
-  // ── Controls ──────────────────────────────────────────────────────────────
-  function toggleFullscreen() {
-    const area = $('player-area');
-    if (document.fullscreenElement) {
-      document.exitFullscreen().catch(() => {});
-    } else {
-      (area.requestFullscreen || area.webkitRequestFullscreen || (() => {})).call(area);
-    }
-  }
-
-  async function togglePiP() {
-    const v = $('videoEl');
-    if (!v.src && !STATE.hls && !STATE.dash) { toast('Nothing is playing', 'warn'); return; }
-    try {
-      if (document.pictureInPictureElement) await document.exitPictureInPicture();
-      else await v.requestPictureInPicture();
-    } catch { toast('Picture-in-Picture not supported in this browser', 'warn'); }
-  }
-
-  // ── Clear ──────────────────────────────────────────────────────────────────
-  function clear() {
-    if (STATE.hls) { STATE.hls.destroy(); STATE.hls = null; }
-    if (STATE.dash) { 
-      try { STATE.dash.reset(); } catch(e) {}
-      STATE.dash = null; 
-    }
-    const v = $('videoEl');
-    v.pause();
-    v.removeAttribute('src');
-    v.load();
-    v.style.display = 'none';
-
-    STATE.all = [];
-    STATE.filtered = [];
-    STATE.shown = 0;
-    STATE.active = null;
-    STATE.groupFilter = '';
-    STATE.searchQuery = '';
-    STATE.favOnly = false;
-
-    $('channelList').innerHTML = '';
-    $('sidebar').style.display = 'none';
-    $('placeholder').style.display = 'flex';
-    $('playerOverlay').style.display = 'none';
-    $('errorBanner').style.display = 'none';
-    $('playlistBadge').style.display = 'none';
-    $('clearBtn').style.display = 'none';
-    $('favToggleBtn').style.display = 'none';
-    $('urlInput').value = 'https://kyatsume.github.io/iptv.m3u8';
-
-    toast('Playlist cleared', 'info', 2000);
-  }
-
-  // ── Keyboard Shortcuts ────────────────────────────────────────────────────
-  document.addEventListener('keydown', e => {
-    const tag = document.activeElement?.tagName;
-    if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
-    const v = $('videoEl');
-    switch (e.key) {
-      case ' ':    e.preventDefault(); v.paused ? v.play() : v.pause(); break;
-      case 'f': case 'F': toggleFullscreen(); break;
-      case 'm': case 'M': v.muted = !v.muted; break;
-      case 'ArrowRight': v.currentTime = Math.min(v.duration || 0, v.currentTime + 10); break;
-      case 'ArrowLeft':  v.currentTime = Math.max(0, v.currentTime - 10); break;
-      case 'ArrowUp':    e.preventDefault(); v.volume = Math.min(1, v.volume + 0.1); break;
-      case 'ArrowDown':  e.preventDefault(); v.volume = Math.max(0, v.volume - 0.1); break;
-    }
-  });
-
-  // ── Wire Up Events ────────────────────────────────────────────────────────
-  $('loadBtn').addEventListener('click', load);
-  $('urlInput').addEventListener('keydown', e => { if (e.key === 'Enter') load(); });
-  $('fileInput').addEventListener('change', function() { loadFile(this); });
-  $('searchInput').addEventListener('input', function() { search(this.value); });
-  $('categorySelect').addEventListener('change', function() { filterGroup(this.value); });
-  $('favToggleBtn').addEventListener('click', toggleFavFilter);
-  $('clearBtn').addEventListener('click', clear);
-  $('pipBtn').addEventListener('click', togglePiP);
-  $('fullscreenBtn').addEventListener('click', toggleFullscreen);
-
-  // Expose for debugging
-  window.Player = { load, toggleFavFilter, togglePiP, toggleFullscreen, clear };
-
-})();
 </script>
 </body>
 </html>
