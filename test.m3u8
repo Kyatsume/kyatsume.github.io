@@ -1,0 +1,7 @@
+#EXTM3U
+#EXTINF:-1 tvg-id="TV5.ph" tvg-logo="https://static.wikia.nocookie.net/russel/images/7/7a/TV5_HD_Logo_2024.png/revision/latest/scale-to-width-down/290?cb=20240202141126" group-title="Entertainment", TV5
+#KODIPROP:inputstreamaddon=inputstream.adaptive
+#KODIPROP:inputstream.adaptive.manifest_type=dash
+#KODIPROP:inputstream.adaptive.license_type=com.widevine.alpha
+#KODIPROP:inputstream.adaptive.license_key=https://widevine-proxy.api.cignal.firstlight.ai/getlicense?service=cignal&version=1.0&kid=9C3E7A51-6D82-4F04-A917-5B8C2E3D7040&ptoken=eyJjb250ZW50SWQiOiI5QzNFN0E1MS02RDgyLTRGMDQtQTkxNy01QjhDMkUzRDcwNDAiLCJsaWNlbnNlRXhwaXJ5VGltZSI6MTc4MzY0NjcyMTQ3MCwiZW50aXRsZWRDb250ZW50SWRzIjoiT1VNelJUZEJOVEV0TmtRNE1pMDBSakEwTFVFNU1UY3ROVUk0UXpKRk0wUTNNRFF3IiwibWF4VXNlcyI6MSwic2lnbmF0dXJlIjoiYjdlZTRjZTUxYmIxNmEwZTNhMjI5ZTQxMzNjYWI4OWQ2MmE5ZDFkYzJhOTJhYzBlODYyY2UyMTI4NmJhMjk5YSIsInVuaXF1ZUlkIjoiYmI2ZDY2OTAtNjBlMy00OGZhLTliNDAtMDFjN2YyZGM0YjAyIiwiaXNzdWVyIjoiU0lHTktFWV9QVE9LRU5fQ09OU1VNRV9JU1NVRVIiLCJhcGlLZXkiOiJhcGlLZXkiLCJrZXlWZXJzaW9uIjoidmVyczAxIiwiZXhwaXJ5VGltZSI6MTc4MzYwMzU4MTQ3MCwiY3JlYXRlZFRpbWUiOjE3ODM2MDM1MjE0NzAsInRva2VuTW9kZWxWZXJzaW9uIjoiVjMifQ==
+https://ucdn.mediaquest.com.ph/bpk-tv/tv5_hd/default1/index.mpd
