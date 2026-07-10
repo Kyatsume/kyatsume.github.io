@@ -9,13 +9,13 @@ https://azura.loveradio.com.ph/listen/love_radio_manila/radio.mp3
 https://3rstv.tonia3305.workers.dev/peanut.m3u8
 
 #EXTINF:-1 tvg-chno="3" channel-number="3" tvg-id="3" tvg-logo="https://i.imgur.com/OCS1l7G.jpeg" tvg-name="3rsSinePinoy" group-title="3rstv",3rsSinePinoy
-https://3rstv.tonia3305.workers.dev/mochi.m3u8
+https://3rssinepinoy.tonia3305.workers.dev/mochi.m3u8
 
 #EXTINF:-1 tvg-chno="4" channel-number="4" tvg-id="4" tvg-logo="https://i.imgur.com/b4rjf8n.jpg" tvg-name="3rsMovieBoxPh" group-title="3rstv",3rsMovieBoxPh
-https://3rstv.tonia3305.workers.dev/moon.m3u8
+https://3rsmoviebox.tonia3305.workers.dev/moon.m3u8
 
 #EXTINF:-1 tvg-chno="5" channel-number="5" tvg-id="5" tvg-logo="https://i.imgur.com/OMGlC4R.jpg" tvg-name="3rsCartoonChannels" group-title="3rstv",3rsCartoonChannels
-https://3rstv.tonia3305.workers.dev/kolet.m3u8
+https://3rscartoonmovies.tonia3305.workers.dev/kolet.m3u8
 
 #EXTINF:-1 tvg-chno="6" channel-number="6" tvg-id="6" tvg-logo="https://i.imgur.com/B19YGN3.jpeg" tvg-name="PHILIPPINES TELEVISION NETWORK" group-title="3rstv",PHILIPPINES TELEVISION NETWORK
 https://sdtvnetworkph.sanmateocable.workers.dev/master.live.m3u8
@@ -553,22 +553,22 @@ https://qp-pldt-live-bpk-02-prod.akamaized.net/bpk-tv/cg_sarisari/default/index.
 #KODIPROP:inputstreamaddon=inputstream.adaptive
 #KODIPROP:inputstream.adaptive.manifest_type=dash
 #KODIPROP:inputstream.adaptive.license_type=org.w3.clearkey
-#KODIPROP:inputstream.adaptive.license_key=71a130a851b9484bb47141c8966fb4a3:ad1f003b4f0b31b75ea4593844435600
-https://qp-pldt-live-bpk-01-prod.akamaized.net/bpk-tv/cg_ptv4_sd/default/index.mpd
+#KODIPROP:inputstream.adaptive.license_key=f8c2a6915d744b309e186a3f7c2d8049:1ad3243b38c60312caa6ba11f150c19c
+https://ucdn.mediaquest.com.ph/bpk-tv/cg_ptv4_sd/default/index.mpd
 
 #EXTINF:-1 tvg-id="152" tvg-chno="152" channel-number="152" tvg-logo="https://i.imgur.com/bpRiu54.png" tvg-name="One News" group-title="Sigtal",One News
 #KODIPROP:inputstreamaddon=inputstream.adaptive
 #KODIPROP:inputstream.adaptive.manifest_type=dash
 #KODIPROP:inputstream.adaptive.license_type=org.w3.clearkey
 #KODIPROP:inputstream.adaptive.license_key=d5c8a2914e734b609f127a3d6c5e8048:11368a3b001407d65a85b4edb410ecdd
-https://qp-pldt-live-bpk-01-prod.akamaized.net/bpk-tv/onenews_hd1/default/index.mpd
+https://ucdn.mediaquest.com.ph/bpk-tv/onenews_hd1/default/index.mpd
 
 #EXTINF:-1 tvg-id="153" tvg-chno="153" channel-number="153" tvg-logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcxvjeBIthYiEaZHeVeYpDicIlOTdv3G6lzoal3VM2xVzWu_J7XxM657oz&s=10" tvg-name="Bilyonaryo Channel" group-title="Sigtal",Bilyonaryo Channel
 #KODIPROP:inputstreamaddon=inputstream.adaptive
 #KODIPROP:inputstream.adaptive.manifest_type=dash
 #KODIPROP:inputstream.adaptive.license_type=org.w3.clearkey
 #KODIPROP:inputstream.adaptive.license_key=2e7f9c518a424d30b2165c3e7a9d6041:8c8c0ef924c982bc1dd92348e024cd4c
-https://qp-pldt-live-bpk-02-prod.akamaized.net/bpk-tv/bilyonaryoch/default1/index.mpd
+https://ucdn.mediaquest.com.ph/bpk-tv/bilyonaryoch/default/index.mpd
 
 #EXTINF:-1 tvg-id="154" tvg-chno="154" channel-number="154" tvg-logo="https://static.wikia.nocookie.net/russel/images/e/e3/TvN_Movies_Pinoy_Logo_2023.png" tvg-name="tvN Movies Pinoy" group-title="Sigtal",tvN Movies Pinoy
 #KODIPROP:inputstreamaddon=inputstream.adaptive
