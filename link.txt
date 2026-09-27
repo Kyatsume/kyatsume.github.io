@@ -1,3 +1,4 @@
 https://raw.githubusercontent.com/pure-oren/activeuser.json/refs/heads/main/Neroflix.m3u
 https://iptv-org.github.io/iptv/index.m3u
 https://raw.githubusercontent.com/juztnobadi24/mylist/main/tv/juzt.json
+https://raw.githubusercontent.com/princematthewpesigan9-ctrl/matt-tv-playlist/refs/heads/main/matttv_playlist_update_2026-09-19.m3u
